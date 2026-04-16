@@ -111,7 +111,6 @@
   .wx-chip .wx-st{font-size:1.2rem;}
   .s-wang{color:#b8860b;font-weight:bold;}.s-xiang{color:#1a7a55;}.s-xiu{color:#1a5a9a;}.s-qiu{color:#7a3a9a;}.s-si{color:#7a7a7a;}
 
-  /* ── 年命條件表格 ── */
   .mingzhu-table{
     width:100%;
     border-collapse:collapse;
@@ -144,6 +143,12 @@
   .mingzhu-table .mz-val{color:var(--gold2);min-width:60px;}
   .mz-x{color:var(--red);font-weight:bold;font-size:1.1rem;}
 
+  /* ★ FIX [新增] 黃黑道當前時辰高亮樣式 */
+  .hdt tr.cur-hour td{
+    background:#fff9c4;
+    font-weight:bold;
+  }
+
   .right-panel{flex:1 1 320px;min-width:240px;display:flex;flex-direction:column;gap:10px;}
   .r-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:12px 16px;}
   .r-title{font-size:1rem;color:var(--gold);letter-spacing:.15em;margin-bottom:10px;border-bottom:1px solid var(--border);padding-bottom:6px;}
@@ -166,16 +171,14 @@
     .action-row{flex-direction:column;align-items:flex-start;}
   }
 
-/* 隱藏 number input 原生上下箭頭 */
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-input[type="number"] {
-  -moz-appearance: textfield; /* Firefox */
-}
-  
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
 </style>
 </head>
 <body>
@@ -319,120 +322,88 @@ input[type="number"] {
         <div class="wx-chip"><div class="wx-nm wx-shui">水</div><div class="wx-st" id="wx-shui">—</div></div>
       </div>
 
-      <!-- ★ 年命條件表格 -->
-<!-- ★ 年命條件表格 -->
-<table class="mingzhu-table">
-<thead>
-  <tr>
-    <th class="mz-hdr" style="width:35%">年命</th>
-    <th class="mz-hdr" style="width:32.5%">結果</th>
-    <th class="mz-hdr" style="width:32.5%">條件滿足</th>
-  </tr>
-</thead>
-<tbody>
-
-  <!-- 年命干支 -->
-  <tr>
-    <td class="mz-row-hdr">年命干支</td>
-    <td class="mz-val" colspan="2" id="mz-gz">—</td>
-  </tr>
-
-  <!-- 三合方 -->
-  <tr>
-    <td class="mz-row-hdr">三合方</td>
-    <td colspan="2" style="padding:0;border:none;">
-      <table style="width:100%;border-collapse:collapse;table-layout:fixed;">
-        <tr>
-          <td class="mz-val" id="mz-sanhe-dir" style="width:50%;border:1px solid var(--border);">—</td>
-          <td class="mz-val" id="mz-sanhe-dir-cond" style="width:50%;border:1px solid var(--border);">　</td>
-        </tr>
+      <table class="mingzhu-table">
+        <thead>
+          <tr>
+            <th class="mz-hdr" style="width:35%">年命</th>
+            <th class="mz-hdr" style="width:32.5%">結果</th>
+            <th class="mz-hdr" style="width:32.5%">條件滿足</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="mz-row-hdr">年命干支</td>
+            <td class="mz-val" colspan="2" id="mz-gz">—</td>
+          </tr>
+          <tr>
+            <td class="mz-row-hdr">三合方</td>
+            <td colspan="2" style="padding:0;border:none;">
+              <table style="width:100%;border-collapse:collapse;table-layout:fixed;">
+                <tr>
+                  <td class="mz-val" id="mz-sanhe-dir" style="width:50%;border:1px solid var(--border);">—</td>
+                  <td class="mz-val" id="mz-sanhe-dir-cond" style="width:50%;border:1px solid var(--border);">　</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td class="mz-row-hdr">三合日</td>
+            <td colspan="2" style="padding:0;border:none;">
+              <table style="width:100%;border-collapse:collapse;table-layout:fixed;">
+                <tr>
+                  <td class="mz-val" id="mz-sanhe-full" style="width:50%;border:1px solid var(--border);">—</td>
+                  <td class="mz-val" id="mz-sanhe-full-cond" style="width:50%;border:1px solid var(--border);">　</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td class="mz-row-hdr">三合時</td>
+            <td colspan="2" style="padding:0;border:none;">
+              <table style="width:100%;border-collapse:collapse;table-layout:fixed;">
+                <tr>
+                  <td class="mz-val" id="mz-sanhe-full-hour" style="width:50%;border:1px solid var(--border);">—</td>
+                  <td class="mz-val" id="mz-sanhe-hour-cond" style="width:50%;border:1px solid var(--border);">　</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td class="mz-row-hdr">天乙貴人</td>
+            <td class="mz-val" colspan="2" id="mz-tianyi">　</td>
+          </tr>
+          <tr>
+            <td class="mz-row-hdr">截路空亡</td>
+            <td class="mz-val" colspan="2" id="mz-jielukong">　</td>
+          </tr>
+          <tr>
+            <td class="mz-row-hdr">五不遇時</td>
+            <td class="mz-val" colspan="2" id="mz-wby">　</td>
+          </tr>
+          <tr>
+            <td class="mz-row-hdr">地支條件</td>
+            <td class="mz-hdr" style="border:1px solid var(--border);">日</td>
+            <td class="mz-hdr" style="border:1px solid var(--border);">時</td>
+          </tr>
+          <tr>
+            <td class="mz-row-hdr">沖</td>
+            <td class="mz-val" id="mz-chong-day" style="border:1px solid var(--border);">　</td>
+            <td class="mz-val" id="mz-chong-hour" style="border:1px solid var(--border);">　</td>
+          </tr>
+          <tr>
+            <td class="mz-row-hdr">害</td>
+            <td class="mz-val" id="mz-hai-day" style="border:1px solid var(--border);">　</td>
+            <td class="mz-val" id="mz-hai-hour" style="border:1px solid var(--border);">　</td>
+          </tr>
+          <tr>
+            <td class="mz-row-hdr">刑</td>
+            <td class="mz-val" id="mz-xing-day" style="border:1px solid var(--border);">　</td>
+            <td class="mz-val" id="mz-xing-hour" style="border:1px solid var(--border);">─</td>
+          </tr>
+        </tbody>
       </table>
-    </td>
-  </tr>
-
-  <!-- 三合日 -->
-  <tr>
-    <td class="mz-row-hdr">三合日</td>
-    <td colspan="2" style="padding:0;border:none;">
-      <table style="width:100%;border-collapse:collapse;table-layout:fixed;">
-        <tr>
-          <td class="mz-val" id="mz-sanhe-full" style="width:50%;border:1px solid var(--border);">—</td>
-          <td class="mz-val" id="mz-sanhe-full-cond" style="width:50%;border:1px solid var(--border);">　</td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-
-  <!-- 三合時 -->
-  <tr>
-    <td class="mz-row-hdr">三合時</td>
-    <td colspan="2" style="padding:0;border:none;">
-      <table style="width:100%;border-collapse:collapse;table-layout:fixed;">
-        <tr>
-          <td class="mz-val" id="mz-sanhe-full-hour" style="width:50%;border:1px solid var(--border);">—</td>
-          <td class="mz-val" id="mz-sanhe-hour-cond" style="width:50%;border:1px solid var(--border);">　</td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-
-  <!-- 天乙貴人 -->
-  <tr>
-    <td class="mz-row-hdr">天乙貴人</td>
-    <td class="mz-val" colspan="2" id="mz-tianyi">　</td>
-  </tr>
-
-
-  <!-- 截路空亡（新增，單欄，比對時支） -->
-  <tr>
-    <td class="mz-row-hdr">截路空亡</td>
-    <td class="mz-val" colspan="2" id="mz-jielukong">　</td>
-  </tr>
-
-  <!-- 五不遇時 -->
-  <tr>
-    <td class="mz-row-hdr">五不遇時</td>
-    <td class="mz-val" colspan="2" id="mz-wby">　</td>
-  </tr>
-
-  <!-- 地支條件標題 -->
-  <tr>
-    <td class="mz-row-hdr">地支條件</td>
-    <td class="mz-hdr" style="border:1px solid var(--border);">日</td>
-    <td class="mz-hdr" style="border:1px solid var(--border);">時</td>
-  </tr>
-
-  <!-- 沖 -->
-  <tr>
-    <td class="mz-row-hdr">沖</td>
-    <td class="mz-val" id="mz-chong-day" style="border:1px solid var(--border);">　</td>
-    <td class="mz-val" id="mz-chong-hour" style="border:1px solid var(--border);">　</td>
-  </tr>
-
-  <!-- 害 -->
-  <tr>
-    <td class="mz-row-hdr">害</td>
-    <td class="mz-val" id="mz-hai-day" style="border:1px solid var(--border);">　</td>
-    <td class="mz-val" id="mz-hai-hour" style="border:1px solid var(--border);">　</td>
-  </tr>
-
-  <!-- 刑 -->
-  <tr>
-    <td class="mz-row-hdr">刑</td>
-    <td class="mz-val" id="mz-xing-day" style="border:1px solid var(--border);">　</td>
-    <td class="mz-val" id="mz-xing-hour" style="border:1px solid var(--border);">─</td>
-  </tr>
-
-  <!-- ★ 日、時空亡整行已刪除 -->
-
-</tbody>
-</table>
-
-
-
-
-    </div><!-- end below-palace -->
-  </div><!-- end palace-wrap -->
+    </div>
+  </div>
 
   <div class="right-panel" id="right-panel">
     <div style="text-align:center;color:var(--dim);font-size:.82rem;padding:40px 0;">按「起盤」顯示資料</div>
@@ -503,6 +474,16 @@ function getXunHead(gz){
   return jz[Math.floor(idx/10)*10];
 }
 
+// ★ FIX [A] 統一時支換算函式
+// 規則與 paipan_standalone_gz.js GetGZ() 內部完全一致：
+//   hh >= 23 且 zwz=true → 晚子時，歸入子時（index 0）
+//   其餘：Math.floor((hh + 1) / 2) % 12
+// 驗證：0→子 1→丑 2→丑 3→寅 ... 11→午 ... 22→亥 23→子
+function hourToDZIndex(hour){
+  if(hour === 23) return 0;              // 晚子時 → 子
+  return Math.floor((hour + 1) / 2) % 12;
+}
+
 const SPIN_CFG={
   year:    {id:'inp-year',    min:1900, max:2100},
   month:   {id:'inp-month',   min:1,    max:12},
@@ -520,15 +501,20 @@ function spin(key,d){
 }
 
 function getInputs(){
+  function safeInt(id, def){
+    var v = parseInt(document.getElementById(id).value);
+    return isNaN(v) ? def : v;  // ← 只有 NaN 才用預設值，0 是合法值
+  }
   return {
-    year:     parseInt(document.getElementById('inp-year').value)||2026,
-    month:    parseInt(document.getElementById('inp-month').value)||4,
-    day:      parseInt(document.getElementById('inp-day').value)||16,
-    hour:     parseInt(document.getElementById('inp-hour').value)||11,
-    minute:   parseInt(document.getElementById('inp-minute').value)||0,
-    mingYear: parseInt(document.getElementById('inp-mingYear').value)||2026
+    year:     safeInt('inp-year',    2026),
+    month:    safeInt('inp-month',   4),
+    day:      safeInt('inp-day',     16),
+    hour:     safeInt('inp-hour',    0),   // 0 點是合法的！
+    minute:   safeInt('inp-minute',  0),
+    mingYear: safeInt('inp-mingYear',2026)
   };
 }
+
 
 function useNow(){
   const now=new Date(Date.now()+8*3600*1000);
@@ -543,14 +529,12 @@ function useNow(){
 }
 
 function getMingGZ(mingYear){
-  try {
-    const result = Paipan.GetGZ(mingYear, 3, 1, 12, 0, 0);
-    const tg = TG_LIST[result[0][0]];
-    const dz = DZ_LIST[result[1][0]];
-    return { gz: tg + dz, tg: tg, dz: dz };
-  } catch(e) {
-    return null;
-  }
+  try{
+    const result=Paipan.GetGZ(mingYear,3,1,12,0,0);
+    const tg=TG_LIST[result[0][0]];
+    const dz=DZ_LIST[result[1][0]];
+    return {gz:tg+dz,tg:tg,dz:dz};
+  }catch(e){ return null; }
 }
 
 // ══════════════════════════════════════════════════════
@@ -559,72 +543,61 @@ function getMingGZ(mingYear){
 function renderMingzhu(pan, gz4){
   const {mingYear} = getInputs();
   const X = '<span class="mz-x">✗</span>';
-  
-  if (pan && pan.palaces) console.log('palaces sample:', pan.palaces[0]);
 
-  // ── 取日地支、時地支
-  function extractDZ(gz4str, domId) {
-    let dz = '';
-    if (gz4str && gz4str.length >= 2) dz = gz4str.charAt(1);
-    if (!DZ_LIST.includes(dz)) {
-      const el = document.getElementById(domId);
-      if (el) dz = el.textContent.replace(/\s/g, '');
+  // ★ FIX [B] 時支讀取：優先從 gz4 直接取字元，不再依賴 DOM
+  // gz4[2] = 日柱干支字串（如「庚申」），gz4[3] = 時柱干支字串
+  // 晚子時（23:00）時，GetGZ 已將日柱進位為隔日，時支強制為子
+  // 因此直接讀 gz4[3][1] 即可得到正確時支
+  function extractDZfromGZ4(gz4str){
+    if(gz4str && gz4str.length >= 2){
+      const dz = gz4str.charAt(1);
+      if(DZ_LIST.includes(dz)) return dz;
     }
-    return DZ_LIST.includes(dz) ? dz : null;
+    return null;
   }
-  const dayDZ  = extractDZ(gz4 ? gz4[2] : '', 'sz-d-dz');
-  const hourDZ = extractDZ(gz4 ? gz4[3] : '', 'sz-h-dz');
+  const dayDZ  = extractDZfromGZ4(gz4 ? gz4[2] : '');
+  const hourDZ = extractDZfromGZ4(gz4 ? gz4[3] : '');
+  // ★ FIX [B] 結束：不再 fallback 到 DOM textContent
 
   // ── (1) 年命干支
   const ming   = getMingGZ(mingYear);
   const mingDZ = ming ? ming.dz : null;
   document.getElementById('mz-gz').textContent = ming ? ming.gz : '—';
 
-  // ── (2) 三合方：條件滿足欄
-  if (mingDZ && Paipan.GetSanHe) {
+  // ── (2) 三合方
+  if(mingDZ && Paipan.GetSanHe){
     const sh = Paipan.GetSanHe(mingDZ);
-    if (sh) {
+    if(sh){
       const mingGua   = sh.input ? sh.input.gua : '';
-      const mingEntry = mingDZ + (mingGua ? '(' + mingGua + ')' : '');
-      const dirParts  = sh.result.map(function(r){ return r.name + '(' + r.gua + ')'; });
+      const mingEntry = mingDZ + (mingGua ? '('+mingGua+')' : '');
+      const dirParts  = sh.result.map(function(r){ return r.name+'('+r.gua+')'; });
       document.getElementById('mz-sanhe-dir').textContent =
         [mingEntry].concat(dirParts).join('、');
 
       const allEntries = [sh.input].concat(sh.result);
-const condParts  = [];
+      const condParts  = [];
+      const starMap = pan ? (pan.星||{}) : {};
+      const doorMap = pan ? (pan.門||{}) : {};
 
-// 直接從 pan.星 / pan.門 查對應宮位的吉凶
-const starMap = pan ? (pan.星 || {}) : {};
-const doorMap = pan ? (pan.門 || {}) : {};
-
-allEntries.forEach(function(r) {
-  const gua    = r.gua;
-  const starJx = STAR_JX[starMap[gua]] || '';
-  const doorJx = DOOR_JX[doorMap[gua]] || '';
-
-  // (1) 同時滿足吉星 + 吉門才顯示
-  if (starJx !== '吉' || doorJx !== '吉') return;
-
-  // (2) 附加硬編碼標記
-  let extra = '';
-  if (gua === '乾') {
-    extra = '<span style="color:var(--red);font-weight:bold;">(✗)</span>';
-  } else if (gua === '震') {
-    extra = '<span style="color:#1565c0;">(卯✗)</span>';
-  } else if (gua === '坤') {
-    extra = '<span style="color:#1565c0;">(申✗)</span>';
-  }
-
-  condParts.push(
-    '<span style="color:var(--teal);font-weight:bold;">' + gua + '</span>' + extra
-  );
-});
-
-document.getElementById('mz-sanhe-dir-cond').innerHTML =
-  condParts.length > 0 ? condParts.join('　') : '　';
-
-
-
+      allEntries.forEach(function(r){
+        const gua    = r.gua;
+        const starJx = STAR_JX[starMap[gua]] || '';
+        const doorJx = DOOR_JX[doorMap[gua]] || '';
+        if(starJx !== '吉' || doorJx !== '吉') return;
+        let extra = '';
+        if(gua === '乾'){
+          extra = '<span style="color:var(--red);font-weight:bold;">(✗)</span>';
+        } else if(gua === '震'){
+          extra = '<span style="color:#1565c0;">(卯✗)</span>';
+        } else if(gua === '坤'){
+          extra = '<span style="color:#1565c0;">(申✗)</span>';
+        }
+        condParts.push(
+          '<span style="color:var(--teal);font-weight:bold;">'+gua+'</span>'+extra
+        );
+      });
+      document.getElementById('mz-sanhe-dir-cond').innerHTML =
+        condParts.length > 0 ? condParts.join('　') : '　';
     } else {
       document.getElementById('mz-sanhe-dir').textContent      = '—';
       document.getElementById('mz-sanhe-dir-cond').textContent = '　';
@@ -634,24 +607,23 @@ document.getElementById('mz-sanhe-dir-cond').innerHTML =
     document.getElementById('mz-sanhe-dir-cond').textContent = '　';
   }
 
-  // ── (3) 三合日 / 三合時 + 條件滿足
-  // 同時記錄三合時命中的地支，供後續天乙貴人比對使用
+  // ── (3) 三合日 / 三合時
   let matchedHourDZ = null;
 
-  if (mingDZ && Paipan.GetSanHe) {
+  if(mingDZ && Paipan.GetSanHe){
     const sh = Paipan.GetSanHe(mingDZ);
-    if (sh) {
+    if(sh){
       const allInfo   = [sh.input].concat(sh.result);
       const sanheDZs  = allInfo.map(function(info){ return info.name; });
-      const sanheText = allInfo.map(function(info){ return info.name + '(' + info.gua + ')'; }).join('、');
+      const sanheText = allInfo.map(function(info){ return info.name+'('+info.gua+')'; }).join('、');
 
       document.getElementById('mz-sanhe-full').textContent      = sanheText;
       document.getElementById('mz-sanhe-full-hour').textContent = sanheText;
 
       // 三合日
       const dayCondTd = document.getElementById('mz-sanhe-full-cond');
-      if (dayCondTd) {
-        if (dayDZ && sanheDZs.includes(dayDZ)) {
+      if(dayCondTd){
+        if(dayDZ && sanheDZs.includes(dayDZ)){
           dayCondTd.textContent      = dayDZ;
           dayCondTd.style.color      = 'var(--teal)';
           dayCondTd.style.fontWeight = 'bold';
@@ -664,19 +636,19 @@ document.getElementById('mz-sanhe-dir-cond').innerHTML =
 
       // 三合時 + 黃黑道
       const hourCondTd = document.getElementById('mz-sanhe-hour-cond');
-      if (hourCondTd) {
-        if (hourDZ && sanheDZs.includes(hourDZ)) {
-          matchedHourDZ = hourDZ;  // ★ 記錄命中的時支
+      if(hourCondTd){
+        if(hourDZ && sanheDZs.includes(hourDZ)){
+          matchedHourDZ = hourDZ;
           const qlMap  = (pan && pan.青龍黃黑道) ? pan.青龍黃黑道 : {};
           const qlInfo = qlMap[hourDZ] || {};
           const dao    = qlInfo.道 || '';
           let daoHtml  = '';
-          if (dao === '黃道') {
+          if(dao === '黃道'){
             daoHtml = '<span style="color:var(--gold);font-size:.9em;">（黃道）</span>';
-          } else if (dao === '黑道') {
+          } else if(dao === '黑道'){
             daoHtml = '<span style="color:var(--dim);font-size:.9em;">（黑道）</span>';
           }
-          hourCondTd.innerHTML       = '<span style="color:var(--teal);font-weight:bold;">' + hourDZ + '</span>' + daoHtml;
+          hourCondTd.innerHTML       = '<span style="color:var(--teal);font-weight:bold;">'+hourDZ+'</span>'+daoHtml;
           hourCondTd.style.color      = '';
           hourCondTd.style.fontWeight = '';
         } else {
@@ -685,35 +657,32 @@ document.getElementById('mz-sanhe-dir-cond').innerHTML =
           hourCondTd.style.fontWeight = '';
         }
       }
-
     } else {
       document.getElementById('mz-sanhe-full').textContent      = '—';
       document.getElementById('mz-sanhe-full-hour').textContent = '—';
       const dc = document.getElementById('mz-sanhe-full-cond');
       const hc = document.getElementById('mz-sanhe-hour-cond');
-      if (dc) dc.textContent = '　';
-      if (hc) hc.textContent = '　';
+      if(dc) dc.textContent = '　';
+      if(hc) hc.textContent = '　';
     }
   } else {
     document.getElementById('mz-sanhe-full').textContent      = '—';
     document.getElementById('mz-sanhe-full-hour').textContent = '—';
     const dc = document.getElementById('mz-sanhe-full-cond');
     const hc = document.getElementById('mz-sanhe-hour-cond');
-    if (dc) dc.textContent = '　';
-    if (hc) hc.textContent = '　';
+    if(dc) dc.textContent = '　';
+    if(hc) hc.textContent = '　';
   }
 
-  // ── (3.8) 天乙貴人：比對三合時命中的地支
+  // ── (3.8) 天乙貴人
   (function(){
     const td = document.getElementById('mz-tianyi');
-    if (!td) return;
-    if (!matchedHourDZ) { td.textContent = '　'; return; }
-
-    const ty = pan ? (pan.天乙貴人 || {}) : {};
+    if(!td) return;
+    if(!matchedHourDZ){ td.textContent = '　'; return; }
+    const ty     = pan ? (pan.天乙貴人||{}) : {};
     const yangDZ = ty.陽貴 ? ty.陽貴.地支 : null;
     const yinDZ  = ty.陰貴 ? ty.陰貴.地支 : null;
-
-    if (matchedHourDZ === yangDZ || matchedHourDZ === yinDZ) {
+    if(matchedHourDZ === yangDZ || matchedHourDZ === yinDZ){
       td.innerHTML = '<span style="color:var(--teal);font-size:1.1em;">✔</span>';
     } else {
       td.textContent = '　';
@@ -721,14 +690,15 @@ document.getElementById('mz-sanhe-dir-cond').innerHTML =
   })();
 
   // ── (3.5) 截路空亡：比對時支
+  // ★ FIX [C] 使用已修正的 hourDZ（來自 gz4[3][1]），不再自行換算
   (function(){
-    const jlObj   = pan ? (pan.截路空亡 || {}) : {};
+    const jlObj   = pan ? (pan.截路空亡||{}) : {};
     const jieList = Array.isArray(jlObj.截路) ? jlObj.截路 : [];
     const konList = Array.isArray(jlObj.空亡)  ? jlObj.空亡  : [];
     const allList = jieList.concat(konList);
     const td = document.getElementById('mz-jielukong');
-    if (!td) return;
-    if (hourDZ && allList.includes(hourDZ)) {
+    if(!td) return;
+    if(hourDZ && allList.includes(hourDZ)){
       td.innerHTML = X;
     } else {
       td.style.color = '';
@@ -741,7 +711,7 @@ document.getElementById('mz-sanhe-dir-cond').innerHTML =
   document.getElementById('mz-wby').innerHTML = wby ? X : '　';
 
   // ── (5) 沖
-  if (mingDZ && Paipan.CheckChong) {
+  if(mingDZ && Paipan.CheckChong){
     const chong     = Paipan.CheckChong(mingDZ);
     const chongName = chong ? chong.chong.name : null;
     document.getElementById('mz-chong-day').innerHTML  = (chongName && dayDZ  === chongName) ? X : '　';
@@ -752,7 +722,7 @@ document.getElementById('mz-sanhe-dir-cond').innerHTML =
   }
 
   // ── (6) 害
-  if (mingDZ && Paipan.CheckHai) {
+  if(mingDZ && Paipan.CheckHai){
     const hai     = Paipan.CheckHai(mingDZ);
     const haiName = hai ? hai.hai.name : null;
     document.getElementById('mz-hai-day').innerHTML  = (haiName && dayDZ  === haiName) ? X : '　';
@@ -762,28 +732,30 @@ document.getElementById('mz-sanhe-dir-cond').innerHTML =
     document.getElementById('mz-hai-hour').innerHTML = '　';
   }
 
-  // ── (6.5) 刑
-  document.getElementById('mz-xing-hour').innerHTML = '─';
-  if (mingDZ && Paipan.CheckXing) {
-    const xing = Paipan.CheckXing(mingDZ, dayDZ || '');
-    document.getElementById('mz-xing-day').innerHTML = (xing && xing.isXing) ? X : '　';
+  // ── (7) 刑
+  // ★ FIX [D] 補上時支的刑比對（原版 mz-xing-hour 固定為「─」未實作）
+  if(mingDZ && Paipan.CheckXing){
+    const xingDay  = Paipan.CheckXing(mingDZ, dayDZ  || '');
+    const xingHour = Paipan.CheckXing(mingDZ, hourDZ || '');
+    document.getElementById('mz-xing-day').innerHTML  = (xingDay  && xingDay.isXing)  ? X : '　';
+    document.getElementById('mz-xing-hour').innerHTML = (xingHour && xingHour.isXing) ? X : '　';
   } else {
-    document.getElementById('mz-xing-day').innerHTML = '　';
+    document.getElementById('mz-xing-day').innerHTML  = '　';
+    document.getElementById('mz-xing-hour').innerHTML = '─';
   }
 }
-
-
 
 function doRender(){
   const {year,month,day,hour,minute}=getInputs();
   if(typeof Paipan==='undefined'||typeof Paipan.dayPan!=='function'){
     alert('JS 模組尚未載入，請確認五個 JS 檔案已正確引入。'); return;
   }
-
+  
   let gz4;
   try{ gz4=Paipan.getGangzhi(year,month,day,hour,minute); }
   catch(e){ console.error('getGangzhi error',e); gz4=['','','','']; }
-
+  
+ 
   let pan;
   try{ pan=Paipan.dayPan(year,month,day,hour,minute); }
   catch(e){ alert('起盤錯誤：'+e.message); console.error(e); return; }
@@ -797,8 +769,8 @@ function doRender(){
   renderKong(gz4);
   renderWuxing(gz4);
   renderPalace(pan);
-  renderRight(pan);
-  renderMingzhu(pan, gz4); // 最後執行，確保 k-day/k-hour 已寫入
+  renderRight(pan,hour);   // ★ FIX [E] 傳入 hour 供黃黑道高亮使用
+  renderMingzhu(pan,gz4);
 }
 
 function renderInfoBar(pan,gz4,lunarObj,y,m,d,h,mi){
@@ -833,11 +805,14 @@ function renderInfoBar(pan,gz4,lunarObj,y,m,d,h,mi){
 }
 
 function renderSizhu(gz4){
+
+
+
   const defs=[
-    {tgId:'sz-y-tg', dzId:'sz-y-dz', gz:gz4[0]},
-    {tgId:'sz-m-tg', dzId:'sz-m-dz', gz:gz4[1]},
-    {tgId:'sz-d-tg', dzId:'sz-d-dz', gz:gz4[2]},
-    {tgId:'sz-h-tg', dzId:'sz-h-dz', gz:gz4[3]},
+    {tgId:'sz-y-tg',dzId:'sz-y-dz',gz:gz4[0]},
+    {tgId:'sz-m-tg',dzId:'sz-m-dz',gz:gz4[1]},
+    {tgId:'sz-d-tg',dzId:'sz-d-dz',gz:gz4[2]},
+    {tgId:'sz-h-tg',dzId:'sz-h-dz',gz:gz4[3]},
   ];
   defs.forEach(def=>{
     const gzStr=def.gz||'';
@@ -855,13 +830,13 @@ function renderKong(gz4){
   const dayXH=getXunHead(dayGZ);
   const dayKong=dayXH?KONG_MAP[dayXH]||'—':'—';
   document.getElementById('k-day').textContent=
-    dayKong.length===2 ? dayKong[0]+'、'+dayKong[1] : dayKong;
+    dayKong.length===2?dayKong[0]+'、'+dayKong[1]:dayKong;
 
   const hourGZ=gz4[3]||'';
   const hourXH=getXunHead(hourGZ);
   const hourKong=hourXH?KONG_MAP[hourXH]||'—':'—';
   document.getElementById('k-hour').textContent=
-    hourKong.length===2 ? hourKong[0]+'、'+hourKong[1] : hourKong;
+    hourKong.length===2?hourKong[0]+'、'+hourKong[1]:hourKong;
 }
 
 function renderWuxing(gz4){
@@ -927,9 +902,14 @@ function renderPalace(pan){
   });
 }
 
-function renderRight(pan){
+// ★ FIX [E] renderRight 新增 hour 參數，用於黃黑道當前時辰高亮
+function renderRight(pan, hour){
   const rp=document.getElementById('right-panel');
   rp.innerHTML='';
+
+  // ★ FIX [E] 用修正後的 hourToDZIndex() 取得當前時支，正確處理晚子時
+  const curDZIndex = hourToDZIndex(hour !== undefined ? hour : getInputs().hour);
+  const curDZ      = DZ_LIST[curDZIndex];
 
   const ql=pan.青龍黃黑道||{};
   let s=`<div class="r-card"><div class="r-title">⊙ 十二時辰黃黑道</div>
@@ -937,7 +917,9 @@ function renderRight(pan){
   DZ_LIST.forEach(dz=>{
     const info=ql[dz]||{};
     const isH=(info.道==='黃道');
-    s+=`<tr>
+    // ★ FIX [E] 當前時辰加上高亮 class
+    const isCur = (dz === curDZ);
+    s+=`<tr${isCur?' class="cur-hour"':''}>
       <td style="color:var(--text2);font-size:.78rem;">${DZ_TIME[dz]}</td>
       <td style="color:var(--text2)">${dz}</td>
       <td class="${isH?'huang':'hei'}">${info.神||'—'}</td>
@@ -956,22 +938,17 @@ function renderRight(pan){
   rp.innerHTML+=ts;
 
   const xi   = pan.喜神||'—';
-  //const jl   = pan.截路空亡||[];
   const wby  = pan.五不遇時;
   const horse= pan.馬星||{};
-	// 截路空亡
-	const jlObj   = pan.截路空亡 || {};
-	const jieStr  = Array.isArray(jlObj.截路) ? jlObj.截路.join('、') : '—';
-	const konStr  = Array.isArray(jlObj.空亡)  ? jlObj.空亡.join('、')  : '—';
-
-
+  const jlObj   = pan.截路空亡 || {};
+  const jieStr  = Array.isArray(jlObj.截路) ? jlObj.截路.join('、') : '—';
+  const konStr  = Array.isArray(jlObj.空亡)  ? jlObj.空亡.join('、')  : '—';
 
   rp.innerHTML+=`<div class="r-card">
     <div class="r-title">✦ 擇日輔助資訊</div>
     <div class="mrow"><span class="ml">喜神方位</span><span class="mv good">${xi}宮</span></div>
-<div class="mrow"><span class="ml">截路</span><span class="mv warn">${jieStr}</span></div>
-<div class="mrow"><span class="ml">空亡</span><span class="mv warn">${konStr}</span></div>
-
+    <div class="mrow"><span class="ml">截路</span><span class="mv warn">${jieStr}</span></div>
+     <div class="mrow"><span class="ml">空亡</span><span class="mv warn">${konStr}</span></div>
     <div class="mrow"><span class="ml">五不遇時</span><span class="mv ${wby?'bad':'good'}">${wby?'⚠ 是':'否'}</span></div>
     <div class="mrow"><span class="ml">天馬（月支）</span><span class="mv">${horse.天馬||'—'}</span></div>
     <div class="mrow"><span class="ml">丁馬（旬首）</span><span class="mv">${horse.丁馬||'—'}</span></div>
@@ -988,32 +965,23 @@ function renderRight(pan){
   </div>`;
 }
 
-// ── Enter 鍵觸發起盤（僅輸入框焦點時有效）──────────
+// ── Enter 鍵觸發起盤 ──────────────────────────────────
 (function(){
-  // 輸入框：Enter = 起盤
   const watchIds = ['inp-year','inp-month','inp-day','inp-hour','inp-minute','inp-mingYear'];
   watchIds.forEach(function(id){
     document.getElementById(id).addEventListener('keydown', function(e){
-      if(e.key === 'Enter'){
-        e.preventDefault();
-        doRender();
-      }
+      if(e.key === 'Enter'){ e.preventDefault(); doRender(); }
     });
   });
-
-  // +/- 按鈕：Enter = 不觸發 click，焦點移回對應輸入框
   document.querySelectorAll('.spin-btn').forEach(function(btn){
     btn.addEventListener('keydown', function(e){
-      if(e.key === 'Enter'){
-        e.preventDefault(); // 阻止按鈕被 Enter 觸發
-      }
+      if(e.key === 'Enter') e.preventDefault();
     });
   });
 })();
-
-
 
 window.addEventListener('load',()=>{ setTimeout(useNow,400); });
 </script>
 </body>
 </html>
+
