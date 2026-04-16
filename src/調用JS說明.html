@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>奇門遁甲 — JS 載入順序紀錄</title>
+  <style>
+    body {
+      font-family: 'Courier New', monospace;
+      background: #1a1a2e;
+      color: #e0d5c5;
+      padding: 40px 32px;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+    h1 {
+      font-family: serif;
+      color: #f0c060;
+      letter-spacing: 0.2em;
+      margin-bottom: 32px;
+      font-size: 1.3rem;
+    }
+    h2 {
+      font-family: serif;
+      color: #f0c060;
+      letter-spacing: 0.15em;
+      margin: 48px 0 20px;
+      font-size: 1.05rem;
+      border-bottom: 1px solid #2a4a7f;
+      padding-bottom: 8px;
+    }
+    .section { margin-bottom: 36px; }
+    .section-title {
+      color: #7eb8f7;
+      font-size: 0.82rem;
+      letter-spacing: 0.15em;
+      margin-bottom: 12px;
+      border-left: 3px solid #7eb8f7;
+      padding-left: 10px;
+    }
+    .file-block {
+      background: #0f1e3a;
+      border: 1px solid #2a4a7f;
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+    }
+    .file-block.day {
+      border-color: #4a7a5f;
+      background: #0a1e14;
+    }
+    .step-badge {
+      background: #2a4a7f;
+      color: #f0c060;
+      border-radius: 50%;
+      width: 28px; height: 28px; min-width: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      font-weight: bold;
+      margin-top: 2px;
+    }
+    .step-badge.day { background: #1a4a2f; color: #7ef7c0; }
+    .file-info { flex: 1; }
+    .file-name { color: #7ef7c0; font-size: 0.95rem; margin-bottom: 6px; }
+    .file-desc { color: #9ab; font-size: 0.78rem; line-height: 1.6; }
+    .provides  { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 6px; }
+    .tag {
+      background: #162a50;
+      border: 1px solid #2a4a7f;
+      border-radius: 4px;
+      padding: 2px 8px;
+      font-size: 0.72rem;
+      color: #c0d8f0;
+    }
+    .tag.cache  { border-color: #4a7a5f; color: #7ef7c0; background: #0f2a1a; }
+    .tag.day    { border-color: #4a7a5f; color: #a0f0c0; background: #0a2a14; }
+    .tag.wx     { border-color: #a07a2a; color: #f0d080; background: #2a1e08; }
+    .tag.wx-fn  { border-color: #c09a3a; color: #ffe090; background: #2a2008; }
+    .arrow {
+      text-align: center;
+      color: #2a4a7f;
+      font-size: 1.2rem;
+      margin: -4px 0 4px 44px;
+    }
+    .depends { font-size: 0.72rem; color: #f7a07e; margin-top: 6px; }
+    .version  { font-size: 0.68rem; color: #7eb8f7; margin-top: 4px; }
+    .code-block {
+      background: #0a1220;
+      border: 1px solid #2a4a7f;
+      border-radius: 8px;
+      padding: 20px 24px;
+      font-size: 0.88rem;
+      line-height: 2;
+      color: #e0d5c5;
+    }
+    .code-block .comment  { color: #5a7a9a; }
+    .code-block .tag-src  { color: #7eb8f7; }
+    .code-block .tag-attr { color: #f0c060; }
+    .code-block .tag-val  { color: #7ef7c0; }
+    .code-block .tag-day  { color: #a0f0c0; }
+    .code-block .tag-wx   { color: #f0d080; }
+    .code-block .blank    { margin: 6px 0; }
+    .chain-box {
+      background: #0a1220;
+      border: 1px solid #2a4a7f;
+      border-radius: 8px;
+      padding: 20px 24px;
+      font-size: 0.82rem;
+      line-height: 1.9;
+      color: #c0d8f0;
+    }
+    .chain-box .arrow-r { color: #f0c060; }
+    .chain-box .hi      { color: #7ef7c0; }
+    .chain-box .hi-day  { color: #a0f0c0; }
+    .chain-box .dim     { color: #5a7a9a; }
+    .note-box {
+      background: #1e2a1a;
+      border: 1px solid #3a6a2a;
+      border-radius: 8px;
+      padding: 14px 18px;
+      font-size: 0.80rem;
+      color: #a0d090;
+      line-height: 1.8;
+      margin-top: 8px;
+    }
+    .note-box .note-title { color: #7ef7a0; font-weight: bold; margin-bottom: 6px; }
+    .warn-box {
+      background: #2a1a0a;
+      border: 1px solid #7a4a1a;
+      border-radius: 8px;
+      padding: 14px 18px;
+      font-size: 0.80rem;
+      color: #f0c090;
+      line-height: 1.8;
+      margin-top: 8px;
+    }
+    .warn-box .warn-title { color: #f0a060; font-weight: bold; margin-bottom: 6px; }
+    .info-box {
+      background: #0f1e3a;
+      border: 1px solid #2a4a7f;
+      border-radius: 8px;
+      padding: 14px 18px;
+      font-size: 0.80rem;
+      color: #c0d8f0;
+      line-height: 1.8;
+      margin-top: 8px;
+    }
+    .info-box .info-title { color: #7eb8f7; font-weight: bold; margin-bottom: 6px; }
+    .wx-box {
+      background: #1a1408;
+      border: 1px solid #a07a2a;
+      border-radius: 8px;
+      padding: 14px 18px;
+      font-size: 0.80rem;
+      color: #f0d080;
+      line-height: 1.8;
+      margin-top: 8px;
+    }
+    .wx-box .wx-title { color: #ffe090; font-weight: bold; margin-bottom: 10px; }
+    .wx-palette {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .wx-chip {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #0a1220;
+      border: 1px solid #2a4a7f;
+      border-radius: 6px;
+      padding: 5px 12px;
+      font-size: 0.78rem;
+    }
+    .wx-swatch {
+      width: 14px; height: 14px;
+      border-radius: 3px;
+      display: inline-block;
+      flex-shrink: 0;
+    }
+    .wx-chip .wx-name { color: #f0d080; }
+    .wx-chip .wx-hex  { color: #7eb8f7; font-size: 0.70rem; }
+    .func-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.78rem;
+      margin-top: 10px;
+    }
+    .func-table th {
+      background: #162a50;
+      color: #7eb8f7;
+      padding: 7px 12px;
+      text-align: left;
+      border: 1px solid #2a4a7f;
+      letter-spacing: 0.05em;
+    }
+    .func-table td {
+      padding: 6px 12px;
+      border: 1px solid #1a3a5f;
+      color: #c0d8f0;
+      vertical-align: top;
+      line-height: 1.6;
+    }
+    .func-table tr:nth-child(even) td { background: #0a1830; }
+    .func-table .fn     { color: #7ef7c0; font-family: 'Courier New', monospace; }
+    .func-table .fn-wx  { color: #f0d080; font-family: 'Courier New', monospace; }
+    .func-table .fn-day { color: #a0f0c0; font-family: 'Courier New', monospace; }
+    .const-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.76rem;
+      margin-top: 10px;
+    }
+    .const-table th {
+      background: #1a2a10;
+      color: #a0f0c0;
+      padding: 6px 12px;
+      text-align: left;
+      border: 1px solid #3a6a2a;
+    }
+    .const-table td {
+      padding: 5px 12px;
+      border: 1px solid #2a4a1a;
+      color: #c0d8f0;
+      vertical-align: top;
+      line-height: 1.6;
+    }
+    .const-table tr:nth-child(even) td { background: #0a1810; }
+    .const-table .cn { color: #a0f0c0; font-family: 'Courier New', monospace; }
+  </style>
+</head>
+<body>
+
+<h1>⚙ 奇門遁甲排盤系統 — JS 模組載入順序與 API 文件</h1>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<h2>一、模組載入順序</h2>
+<!-- ═══════════════════════════════════════════════════════ -->
+
+<div class="section">
+  <div class="section-title">LOAD ORDER — 依賴鏈由底層至頂層</div>
+
+  <!-- Step 1 -->
+  <div class="file-block">
+    <div class="step-badge">1</div>
+    <div class="file-info">
+      <div class="file-name">paipan_standalone_astro.js</div>
+      <div class="version">v4.0 — 天文 / 時間基礎層</div>
+      <div class="file-desc">
+        提供儒略日、Delta T、節氣計算、攝動修正等天文核心函式。<br>
+        完整照抄 paipan.js 原版 ptsa/ptsb/ptsc 攝動陣列；補上 VE() T^5 項；
+        新增 MeanJQJD() 克卜勒橢圓軌道計算；內含 120+ 年份 jqXFu 歷史修正表。
+      </div>
+      <div class="provides">
+        <span class="tag">Jdays()</span>
+        <span class="tag">Jtime()</span>
+        <span class="tag">DeltaT()</span>
+        <span class="tag">VE()</span>
+        <span class="tag">MeanJQJD()</span>
+        <span class="tag">Perturbation()</span>
+        <span class="tag">GetAdjustedJQ()</span>
+        <span class="tag">intval()</span>
+        <span class="tag">floatval()</span>
+        <span class="tag">ctg / cdz / gz</span>
+        <span class="tag">synmonth / ty / J</span>
+        <span class="tag">jqXFu（歷史修正表）</span>
+      </div>
+      <div class="depends">⚠ 依賴：無（完全獨立，必須第一個載入）</div>
+    </div>
+  </div>
+  <div class="arrow">↓</div>
+
+  <!-- Step 2 -->
+  <div class="file-block">
+    <div class="step-badge">2</div>
+    <div class="file-info">
+      <div class="file-name">paipan_standalone_lunar.js</div>
+      <div class="version">v3.0 — 農曆計算層</div>
+      <div class="file-desc">
+        完全照 paipan.js 重寫農曆轉換邏輯。<br>
+        包含 suoKB 朔日線性擬合參數、smXFu 歷史朔日修正表、
+        TrueNewMoon() 補上線性擬合與歷史修正、Solar2Lunar() 完整農曆轉換。
+      </div>
+      <div class="provides">
+        <span class="tag">Solar2Lunar()</span>
+        <span class="tag">TrueNewMoon()</span>
+        <span class="tag">MeanNewMoon()</span>
+        <span class="tag">GetZQandSMandLunarMonthCode()</span>
+        <span class="tag">suoKB（朔日擬合參數）</span>
+        <span class="tag">smXFu（歷史朔日修正）</span>
+      </div>
+      <div class="depends">⚠ 依賴：paipan_standalone_astro.js（Jdays / Jtime / GetAdjustedJQ / synmonth）</div>
+    </div>
+  </div>
+  <div class="arrow">↓</div>
+
+  <!-- Step 3 -->
+  <div class="file-block">
+    <div class="step-badge">3</div>
+    <div class="file-info">
+      <div class="file-name">paipan_standalone_gz.js</div>
+      <div class="version">v2.6 — 四柱干支計算層</div>
+      <div class="file-desc">
+        四柱（年月日時）干支推算，含地支三合、相沖、三刑、相害查詢。<br>
+        v2.6 新增 CheckHai()；v2.5 輸入改為地支字串；
+        v2.4 新增 GetSanHe / CheckChong / CheckXing；
+        v2.3 修正 dayBase → 2451551（2000-01-07 甲子日，驗證：庚申 ✅）；
+        v2.2 修正年柱立春基準 jq0[21]。
+      </div>
+      <div class="provides">
+        <span class="tag">GetGZ(yy,mm,dd,hh,mt,ss)</span>
+        <span class="tag">GetSanHe(dzName)</span>
+        <span class="tag">CheckChong(dzName)</span>
+        <span class="tag">CheckXing(dzNameA, dzNameB)</span>
+        <span class="tag">CheckHai(dzName)</span>
+        <span class="tag">_DZ_NAMES[]</span>
+        <span class="tag">_DZ_GUA[]</span>
+      </div>
+      <div class="depends">⚠ 依賴：paipan_standalone_astro.js（Jdays / GetAdjustedJQ / zwz）</div>
+    </div>
+  </div>
+  <div class="arrow">↓</div>
+
+  <!-- Step 4 -->
+  <div class="file-block">
+    <div class="step-badge">4</div>
+    <div class="file-info">
+      <div class="file-name">paipan_qimen_addon.js</div>
+      <div class="version">v9.2 — 奇門基礎方法層</div>
+      <div class="file-desc">
+        奇門遁甲基礎工具層，提供六十甲子、節氣列表、五行對應常數與查詢函式。<br>
+        v9.2 新增五行對應常數區（wuxingColor / starWuxing / doorWuxing / godWuxing / tgWuxing / dzWuxing）
+        及五行查詢工具函式；v9.1 修正 _getYearJieqiList 快取邏輯，
+        改用獨立 _jqObjCache，clearCache 補上清除 _jqObjCache。
+      </div>
+      <div class="provides">
+        <span class="tag">jiazi()</span>
+        <span class="tag">_getYearJieqiList()</span>
+        <span class="tag">jq()</span>
+        <span class="tag">newList()</span>
+        <span class="tag cache">_jiaziCache</span>
+        <span class="tag cache">_minutesJiaziCache</span>
+        <span class="tag cache">_jqObjCache</span>
+        <span class="tag wx">wuxingColor</span>
+        <span class="tag wx">starWuxing</span>
+        <span class="tag wx">doorWuxing</span>
+        <span class="tag wx">godWuxing</span>
+        <span class="tag wx">tgWuxing</span>
+        <span class="tag wx">dzWuxing</span>
+        <span class="tag wx-fn">getWuxing(type, name)</span>
+        <span class="tag wx-fn">getColor(type, name)</span>
+        <span class="tag wx-fn">getWuxingColor(wx)</span>
+      </div>
+      <div class="depends">⚠ 依賴：astro.js（ctg/cdz/Jtime/GetAdjustedJQ）+ lunar.js（Solar2Lunar）+ gz.js（GetGZ）</div>
+    </div>
+  </div>
+  <div class="arrow">↓</div>
+
+  <!-- Step 5 -->
+  <div class="file-block day">
+    <div class="step-badge day">5</div>
+    <div class="file-info">
+      <div class="file-name">paipan_qimen_day.js</div>
+      <div class="version">v4.0 — 《金函玉鏡》日家奇門排盤層（完整修正版）</div>
+      <div class="file-desc">
+        日家奇門完整排盤：九星、八門、八神、地盤奇儀、天盤奇儀飛布。<br>
+        [修A] dayPanDoor 八門起算點修正：以冬至（陽遁）或夏至（陰遁）前最近甲子日為第0組基準，計算距離天數再除3取組；<br>
+        [修B] 新增 dayPanHeaven 天盤奇儀：以時干為值符，從值符宮依陽順陰逆飛布天盤奇儀；<br>
+        [修C] dayPan 回傳值補入天盤欄位。<br>
+        原典驗證 ✅：九星甲子→艮太乙；八門甲子陽順休坎；元局2002-02-26乙丑→中元四局。
+      </div>
+      <div class="provides">
+        <span class="tag day">dayPan()</span>
+        <span class="tag day">dayPanDoor()</span>
+        <span class="tag day">dayPanHeaven()</span>
+        <span class="tag day">dayPanNineStar()</span>
+        <span class="tag day">dayNineStars[]</span>
+        <span class="tag day">dayNineStarJiXiong{}</span>
+        <span class="tag day">dayEightDoors[]</span>
+        <span class="tag day">dayEightGods[]</span>
+        <span class="tag day">dayNineGua[]</span>
+        <span class="tag day">dayClockwiseEight[]</span>
+        <span class="tag day">dayEightGuaYang[] / dayEightGuaYin[]</span>
+        <span class="tag day">dayEarthGanYang[] / dayEarthGanYin[]</span>
+        <span class="tag day">dayHeavenGanYang[] / dayHeavenGanYin[]</span>
+        <span class="tag day">_dayFlyOrderYang[] / _dayFlyOrderYin[]</span>
+        <span class="tag day">_dayTGIsYang()</span>
+        <span class="tag day">_dayIsYang()</span>
+        <span class="tag day">_dayShunHead()</span>
+        <span class="tag day">_dayJulian()</span>
+      </div>
+      <div class="depends">⚠ 依賴：全部前四層（astro + lunar + gz + addon）</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<h2>二、HTML 引入範例</h2>
+<!-- ═══════════════════════════════════════════════════════ -->
+
+<div class="section">
+  <div class="section-title">SCRIPT TAG — 依序引入，不可顛倒</div>
+  <div class="code-block">
+    <span class="comment">&lt;!-- 1. 天文基礎層（無依賴）--&gt;</span><br>
+    &lt;<span class="tag-src">script</span> <span class="tag-attr">src</span>=<span class="tag-val">"paipan_standalone_astro.js"</span>&gt;&lt;/<span class="tag-src">script</span>&gt;<br>
+    <div class="blank"></div>
+    <span class="comment">&lt;!-- 2. 農曆計算層（依賴 astro）--&gt;</span><br>
+    &lt;<span class="tag-src">script</span> <span class="tag-attr">src</span>=<span class="tag-val">"paipan_standalone_lunar.js"</span>&gt;&lt;/<span class="tag-src">script</span>&gt;<br>
+    <div class="blank"></div>
+    <span class="comment">&lt;!-- 3. 四柱干支層（依賴 astro）--&gt;</span><br>
+    &lt;<span class="tag-src">script</span> <span class="tag-attr">src</span>=<span class="tag-val">"paipan_standalone_gz.js"</span>&gt;&lt;/<span class="tag-src">script</span>&gt;<br>
+    <div class="blank"></div>
+    <span class="comment">&lt;!-- 4. 奇門基礎方法層（依賴 astro + lunar + gz）--&gt;</span><br>
+    &lt;<span class="tag-src">script</span> <span class="tag-attr">src</span>=<span class="tag-val">"paipan_qimen_addon.js"</span>&gt;&lt;/<span class="tag-src">script</span>&gt;<br>
+    <div class="blank"></div>
+    <span class="comment">&lt;!-- 5. 日家奇門排盤層（依賴全部前四層）--&gt;</span><br>
+    &lt;<span class="tag-src">script</span> <span class="tag-attr">src</span>=<span class="tag-val">"paipan_qimen_day.js"</span>&gt;&lt;/<span class="tag-src">script</span>&gt;
+  </div>
+
+  <div class="warn-box">
+    <div class="warn-title">⚠ 載入順序注意事項</div>
+    所有模組共用 <code>window.Paipan</code> 命名空間，必須嚴格依照 1→2→3→4→5 順序載入。<br>
+    lunar.js 與 gz.js（步驟2、3）均依賴 astro.js，兩者之間無相互依賴，可互換順序。<br>
+    addon.js 需要 astro + lunar + gz 三層全部就緒後才可載入。<br>
+    day.js 為最頂層，必須最後載入。
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<h2>三、依賴鏈示意圖</h2>
+<!-- ═══════════════════════════════════════════════════════ -->
+
+<div class="section">
+  <div class="chain-box">
+    <span class="hi">paipan_standalone_astro.js</span> <span class="dim">（無依賴，基礎層）</span><br>
+    <span class="arrow-r">├──→</span> <span class="hi">paipan_standalone_lunar.js</span> <span class="dim">（依賴 astro）</span><br>
+    <span class="arrow-r">├──→</span> <span class="hi">paipan_standalone_gz.js</span>    <span class="dim">（依賴 astro）</span><br>
+    <span class="arrow-r">└──→</span> <span class="hi">paipan_qimen_addon.js</span>      <span class="dim">（依賴 astro + lunar + gz）</span><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="arrow-r">└──→</span> <span class="hi-day">paipan_qimen_day.js</span> <span class="dim">（依賴全部前四層，最頂層）</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<h2>四、各模組 API 速查表</h2>
+<!-- ═══════════════════════════════════════════════════════ -->
+
+<div class="section">
+
+  <!-- astro -->
+  <div class="section-title">paipan_standalone_astro.js — 天文函式</div>
+  <table class="func-table">
+    <tr>
+      <th>函式 / 常數</th>
+      <th>說明</th>
+      <th>回傳 / 型別</th>
+    </tr>
+    <tr>
+      <td class="fn">Jdays(y,m,d,h,mi,s)</td>
+      <td>公曆轉儒略日（Julian Day Number）</td>
+      <td>Number（JD）</td>
+    </tr>
+    <tr>
+      <td class="fn">Jtime(jd)</td>
+      <td>儒略日轉公曆日期時間物件</td>
+      <td>Object {y,m,d,h,mi,s}</td>
+    </tr>
+    <tr>
+      <td class="fn">DeltaT(y)</td>
+      <td>ΔT 時差修正（秒）</td>
+      <td>Number（秒）</td>
+    </tr>
+    <tr>
+      <td class="fn">VE(y)</td>
+      <td>春分點儒略日（含 T^5 項）</td>
+      <td>Number（JD）</td>
+    </tr>
+    <tr>
+      <td class="fn">MeanJQJD(y, n)</td>
+      <td>第 n 個節氣平均儒略日（克卜勒橢圓軌道）</td>
+      <td>Number（JD）</td>
+    </tr>
+    <tr>
+      <td class="fn">Perturbation(jd)</td>
+      <td>太陽攝動修正（ptsa/ptsb/ptsc 陣列）</td>
+      <td>Number（天）</td>
+    </tr>
+    <tr>
+      <td class="fn">GetAdjustedJQ(y, n)</td>
+      <td>取第 n 個節氣真實儒略日（含 ΔT + 攝動 + jqXFu 修正）</td>
+      <td>Number（JD）</td>
+    </tr>
+    <tr>
+      <td class="fn">intval(v, base)</td>
+      <td>安全整數轉換（仿 PHP intval）</td>
+      <td>Number（整數）</td>
+    </tr>
+    <tr>
+      <td class="fn">floatval(v)</td>
+      <td>安全浮點數轉換</td>
+      <td>Number（浮點）</td>
+    </tr>
+    <tr>
+      <td class="fn">ctg / cdz</td>
+      <td>天干字串 / 地支字串（各10/12字）</td>
+      <td>String</td>
+    </tr>
+    <tr>
+      <td class="fn">gz[]</td>
+      <td>六十甲子陣列（甲子～癸亥）</td>
+      <td>Array[60]</td>
+    </tr>
+    <tr>
+      <td class="fn">jqXFu{}</td>
+      <td>節氣歷史修正表（120+ 年份，物件格式）</td>
+      <td>Object</td>
+    </tr>
+  </table>
+
+  <!-- lunar -->
+  <div class="section-title" style="margin-top:28px;">paipan_standalone_lunar.js — 農曆函式</div>
+  <table class="func-table">
+    <tr>
+      <th>函式 / 常數</th>
+      <th>說明</th>
+      <th>回傳 / 型別</th>
+    </tr>
+    <tr>
+      <td class="fn">Solar2Lunar(y,m,d)</td>
+      <td>公曆轉農曆（含閏月、月大小、農曆年干支）</td>
+      <td>Object {ly, lm, ld, leap, ...}</td>
+    </tr>
+    <tr>
+      <td class="fn">TrueNewMoon(k)</td>
+      <td>第 k 個真實朔日儒略日（含 suoKB 線性擬合 + smXFu 歷史修正）</td>
+      <td>Number（JD）</td>
+    </tr>
+    <tr>
+      <td class="fn">MeanNewMoon(k)</td>
+      <td>第 k 個平均朔日儒略日</td>
+      <td>Number（JD）</td>
+    </tr>
+    <tr>
+      <td class="fn">GetZQandSMandLunarMonthCode(y)</td>
+      <td>取得指定年份中氣、朔日及農曆月份編碼</td>
+      <td>Object {zq[], sm[], mc[]}</td>
+    </tr>
+    <tr>
+      <td class="fn">suoKB[]</td>
+      <td>朔日線性擬合參數陣列（15組基準點）</td>
+      <td>Array</td>
+    </tr>
+    <tr>
+      <td class="fn">smXFu{}</td>
+      <td>歷史朔日修正表（年份 → 13個月偏移陣列）</td>
+      <td>Object</td>
+    </tr>
+  </table>
+
+  <!-- gz -->
+  <div class="section-title" style="margin-top:28px;">paipan_standalone_gz.js — 干支函式</div>
+  <table class="func-table">
+    <tr>
+      <th>函式 / 常數</th>
+      <th>說明</th>
+      <th>回傳 / 型別</th>
+    </tr>
+    <tr>
+      <td class="fn">GetGZ(yy,mm,dd,hh,mt,ss)</td>
+      <td>取得四柱干支（年月日時），以立春為年柱換年基準</td>
+      <td>Object {year, month, day, hour}</td>
+    </tr>
+    <tr>
+      <td class="fn">GetSanHe(dzName)</td>
+      <td>地支三合查詢，回傳三合局及後天八卦方位</td>
+      <td>Object {sanhe[], gua, direction}</td>
+    </tr>
+    <tr>
+      <td class="fn">CheckChong(dzName)</td>
+      <td>取得相沖地支</td>
+      <td>String（地支）</td>
+    </tr>
+    <tr>
+      <td class="fn">CheckXing(dzNameA, dzNameB)</td>
+      <td>判斷兩地支是否構成三刑</td>
+      <td>Boolean</td>
+    </tr>
+    <tr>
+      <td class="fn">CheckHai(dzName)</td>
+      <td>地支相害查詢，回傳相害地支資訊</td>
+      <td>Object {hai, ...}</td>
+    </tr>
+  </table>
+
+  <!-- addon -->
+  <div class="section-title" style="margin-top:28px;">paipan_qimen_addon.js — 奇門基礎 + 五行函式</div>
+  <table class="func-table">
+    <tr>
+      <th>函式 / 常數</th>
+      <th>說明</th>
+      <th>回傳 / 型別</th>
+    </tr>
+    <tr>
+      <td class="fn">jiazi()</td>
+      <td>取得六十甲子陣列（含快取）</td>
+      <td>Array[60]</td>
+    </tr>
+    <tr>
+      <td class="fn">_getYearJieqiList(y)</td>
+      <td>取得指定年份全年節氣物件陣列（含獨立 _jqObjCache 快取）</td>
+      <td>Array[24]</td>
+    </tr>
+    <tr>
+      <td class="fn">jq(y,m,d,h,mi)</td>
+      <td>判斷指定日期時間所在節氣名稱</td>
+      <td>String（節氣名）</td>
+    </tr>
+    <tr>
+      <td class="fn">newList(arr, start)</td>
+      <td>陣列從指定元素重新排列（循環）</td>
+      <td>Array</td>
+    </tr>
+    <tr>
+      <td class="fn-wx">getWuxing(type, name)</td>
+      <td>查詢任意名稱的五行屬性（type: 'star'/'door'/'god'/'tg'/'dz'）</td>
+      <td>String（五行）</td>
+    </tr>
+    <tr>
+      <td class="fn-wx">getColor(type, name)</td>
+      <td>查詢任意名稱的五行對應 CSS 顏色</td>
+      <td>String（CSS色碼）</td>
+    </tr>
+    <tr>
+      <td class="fn-wx">getWuxingColor(wx)</td>
+      <td>五行名稱直接查詢 CSS 顏色</td>
+      <td>String（CSS色碼）</td>
+    </tr>
+    <tr>
+      <td class="fn-wx">wuxingColor{}</td>
+      <td>五行→CSS顏色對照（木#4caf50 火#f44336 土#ff9800 金#ffc107 水#2196f3）</td>
+      <td>Object</td>
+    </tr>
+    <tr>
+      <td class="fn-wx">starWuxing{}</td>
+      <td>九星→五行對照（蓬水、芮土、沖木、輔木、禽土、心金、柱金、任土、英火）</td>
+      <td>Object</td>
+    </tr>
+    <tr>
+      <td class="fn-wx">doorWuxing{}</td>
+      <td>八門→五行對照（休水、生土、傷木、杜木、景火、死土、驚金、開金）</td>
+      <td>Object</td>
+    </tr>
+    <tr>
+      <td class="fn-wx">godWuxing{}</td>
+      <td>八神→五行對照（符土、蛇火、陰金、合木、虎金、武水、天金、地土）</td>
+      <td>Object</td>
+    </tr>
+  </table>
+
+  <!-- day -->
+  <div class="section-title" style="margin-top:28px;">paipan_qimen_day.js — 日家奇門排盤函式</div>
+  <table class="func-table">
+    <tr>
+      <th>函式 / 常數</th>
+      <th>說明</th>
+      <th>回傳 / 型別</th>
+    </tr>
+    <tr>
+      <td class="fn fn-day">dayPan(y,m,d,h,mi)</td>
+      <td>日家奇門完整排盤主函式，回傳九宮完整盤面（含天盤、地盤、九星、八門、八神）</td>
+      <td>Object（九宮盤面）</td>
+    </tr>
+    <tr>
+      <td class="fn fn-day">dayPanDoor(dayGZ, isYang, yuan, ju)</td>
+      <td>八門布盤：以冬/夏至前最近甲子日為基準計算起算點，陽順陰逆飛布八門</td>
+      <td>Object（宮→門 映射）</td>
+    </tr>
+    <tr>
+      <td class="fn fn-day">dayPanHeaven(timeGZ, isYang, earthPan)</td>
+      <td>天盤奇儀飛布：以時干為值符，從值符宮依陽順陰逆飛布九宮天盤</td>
+      <td>Object（宮→天干 映射）</td>
+    </tr>
+    <tr>
+      <td class="fn fn-day">dayPanNineStar(dayGZ, isYang, yuan, ju)</td>
+      <td>九星飛宮：依陽遁順行（艮→離→坎…）或陰遁逆行（坤→坎→離…）布九星</td>
+      <td>Object（宮→星 映射）</td>
+    </tr>
+    <tr>
+      <td class="fn fn-day">dayNineStars[]</td>
+      <td>金函九星序列：太乙、攝提、軒轅、招搖、天符、青龍、咸池、太陰、天乙</td>
+      <td>Array[9]</td>
+    </tr>
+    <tr>
+      <td class="fn fn-day">dayNineStarJiXiong{}</td>
+      <td>九星吉凶對照（太乙吉、攝提凶、天符凶、青龍吉、咸池凶、太陰吉、天乙吉…）</td>
+      <td>Object</td>
+    </tr>
+    <tr>
+      <td class="fn fn-day">dayEightDoors[]</td>
+      <td>八門序列：休→生→傷→杜→景→死→驚→開</td>
+      <td>Array[8]</td>
+    </tr>
+    <tr>
+      <td class="fn fn-day">dayEightGods[]</td>
+      <td>八神序列：值符→螣蛇→太陰→六合→白虎→玄武→九地→九天</td>
+      <td>Array[8]</td>
+    </tr>
+    <tr>
+      <td class="fn fn-day">dayNineGua[]</td>
+      <td>九宮含中（洛書序）：坎坤震巽中乾兌艮離</td>
+      <td>Array[9]</td>
+    </tr>
+    <tr>
+      <td class="fn fn-day">dayEarthGanYang[] / dayEarthGanYin[]</td>
+      <td>地盤天干序列：陽遁戊己庚辛壬癸丁丙乙 / 陰遁戊乙丙丁癸壬辛庚己</td>
+      <td>Array[9]</td>
+    </tr>
+    <tr>
+      <td class="fn fn-day">dayHeavenGanYang[] / dayHeavenGanYin[]</td>
+      <td>天盤天干序列（同地盤，用於天盤飛布）</td>
+      <td>Array[9]</td>
+    </tr>
+    <tr>
+      <td class="fn fn-day">_dayFlyOrderYang[] / _dayFlyOrderYin[]</td>
+      <td>九星飛宮順序：陽遁艮離坎坤震巽中乾兌 / 陰遁坤坎離艮兌乾中巽震</td>
+      <td>Array[9]</td>
+    </tr>
+  </table>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<h2>五、五行顏色對照</h2>
+<!-- ═══════════════════════════════════════════════════════ -->
+
+<div class="section">
+  <div class="wx-box">
+    <div class="wx-title">🎨 wuxingColor — 五行 CSS 顏色對照（v9.2）</div>
+    <div class="wx-palette">
+      <div class="wx-chip">
+        <span class="wx-swatch" style="background:#4caf50;"></span>
+        <span class="wx-name">木</span>
+        <span class="wx-hex">#4caf50</span>
+      </div>
+      <div class="wx-chip">
+        <span class="wx-swatch" style="background:#f44336;"></span>
+        <span class="wx-name">火</span>
+        <span class="wx-hex">#f44336</span>
+      </div>
+      <div class="wx-chip">
+        <span class="wx-swatch" style="background:#ff9800;"></span>
+        <span class="wx-name">土</span>
+        <span class="wx-hex">#ff9800</span>
+      </div>
+      <div class="wx-chip">
+        <span class="wx-swatch" style="background:#ffc107;"></span>
+        <span class="wx-name">金</span>
+        <span class="wx-hex">#ffc107</span>
+      </div>
+      <div class="wx-chip">
+        <span class="wx-swatch" style="background:#2196f3;"></span>
+        <span class="wx-name">水</span>
+        <span class="wx-hex">#2196f3</span>
+      </div>
+    </div>
+    使用方式：<code>Paipan.getWuxingColor('木')</code> → <code>'#4caf50'</code><br>
+    或透過 <code>Paipan.getColor('star', '蓬')</code> → 查九星蓬（水）→ <code>'#2196f3'</code>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<h2>六、版本修正紀錄摘要</h2>
+<!-- ═══════════════════════════════════════════════════════ -->
+
+<div class="section">
+  <table class="func-table">
+    <tr>
+      <th>模組</th>
+      <th>版本</th>
+      <th>關鍵修正</th>
+    </tr>
+    <tr>
+      <td>astro.js</td>
+      <td>v4.0</td>
+      <td>Perturbation() 完整 ptsa/ptsb/ptsc；MeanJQJD() 克卜勒軌道；VE() 補 T^5 項；jqXFu 完整照抄</td>
+    </tr>
+    <tr>
+      <td>lunar.js</td>
+      <td>v3.0</td>
+      <td>完全照 paipan.js 重寫：suoKB / smXFu / TrueNewMoon / GetZQandSMandLunarMonthCode / Solar2Lunar</td>
+    </tr>
+    <tr>
+      <td>gz.js</td>
+      <td>v2.6</td>
+      <td>新增 CheckHai()；v2.5 輸入改地支字串；v2.3 dayBase→2451551；v2.2 年柱立春基準修正</td>
+    </tr>
+    <tr>
+      <td>addon.js</td>
+      <td>v9.2</td>
+      <td>新增五行常數區（6組對照表）及三個查詢函式；v9.1 修正 _jqObjCache 獨立快取邏輯</td>
+    </tr>
+    <tr>
+      <td>day.js</td>
+      <td>v4.0</td>
+      <td>[修A] 八門起算點冬/夏至甲子基準；[修B] 天盤奇儀飛布；[修C] dayPan 回傳補天盤欄位</td>
+    </tr>
+  </table>
+
+  <div class="note-box">
+    <div class="note-title">✅ 原典驗證通過（金函玉鏡）</div>
+    九星：甲子→艮太乙，乙丑→離太乙，丙寅→坎太乙（金函卷一第25條）<br>
+    八門：甲子陽順休坎，乙丑陰逆休坎，丙寅陽順休坎（金函卷一第23條）<br>
+    元局：2002-02-26 乙丑 → 中元四局（教材第一節例子）
+  </div>
+</div>
+
+</body>
+</html>

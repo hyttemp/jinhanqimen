@@ -364,6 +364,10 @@ Paipan._tgdzToGZ = function(tg, dz) {
 };
 
 Paipan.getGangzhi1 = function(year, month, day, hour, minute) {
+	// ★ 防呆：確保 hour 為數字，避免 falsy 值（0）被 GetGZ 內部誤判
+  hour   = (typeof hour   === 'number') ? hour   : parseInt(hour)   || 0;
+  minute = (typeof minute === 'number') ? minute : parseInt(minute) || 0;
+  
   var raw = Paipan.GetGZ(year, month, day, hour, minute, 1);
   if (!raw) return [null, null, null, null];
 
@@ -382,7 +386,17 @@ Paipan.getGangzhi1 = function(year, month, day, hour, minute) {
   }
 
   var hourMap = Paipan.findLunarHour(dTG);
-  var hTG1    = (hourMap && hTG) ? (hourMap[hTG[1]] || hTG) : hTG;
+  
+  // ★ 修正：用 Array.from 安全取地支字元，避免中文字元 split 問題
+  var hTGchars = Array.from ? Array.from(hTG || '') : (hTG || '').split('');
+  var hDZchar  = hTGchars[1] || '';
+
+  // ★ 修正：hour=0 強制使用子時
+  if (hour === 0) {
+    hDZchar = '子';
+  }
+  
+   var hTG1 = (hourMap && hDZchar) ? (hourMap[hDZchar] || hTG) : hTG;
 
   return [yTG, mTG1, dTG, hTG1];
 };

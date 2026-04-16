@@ -300,38 +300,42 @@ Paipan.dayPanStar = function(year, month, day, hour, minute) {
 };
 
 // ════════════════════════════════════════════════════════════
-// 【修A】金函八門排法（轉法，三日一宮，陽順陰逆布門）
+// 【修A v2】金函八門排法
 //
-// 原典：「冬至最近的甲子日開始陽遁八門起例，一卦管三日」
+// 修正紀錄 v4.0 → v4.1：
+//   [修A-v2] 休門宮計算方式錯誤
+//            原：用 days/groupOffset 從局數宮偏移
+//            改：直接以日干支查表（每3個甲子循環對應8宮）
+//            原典：「一卦管三日」= 每3個甲子同一宮，60甲子循環8宮
 //
-// 修正前：直接用六十甲子序號 idx 除3，未對齊節氣起算點
-// 修正後：計算當日距「冬至/夏至前最近甲子日」的天數，
-//         再除3取組，確保與原典起算點一致
+// 陽遁：甲子乙丑丙寅→坎，丁卯戊辰己巳→坤，庚午辛未壬申→震...（循環）
+// 陰遁：甲子乙丑丙寅→離，丁卯戊辰己巳→艮，庚午辛未壬申→兌...（反向循環）
 // ════════════════════════════════════════════════════════════
 Paipan.dayPanDoor = function(year, month, day, hour, minute) {
-  var isYang  = Paipan._dayIsYang(year, month, day, hour, minute);
-  var gz      = Paipan.getGangzhi(year, month, day, hour, minute);
-  var dayGZ   = gz[2];
-  var dayTG   = dayGZ[0];
+  var isYang = Paipan._dayIsYang(year, month, day, hour, minute);
+  var gz     = Paipan.getGangzhi(year, month, day, hour, minute);
+  var dayTG  = gz[2][0];
+  var dayGZ  = gz[2];       // 日干支，如「辛酉」
 
-  // [修A] 以冬至/夏至前最近甲子日為第0組基準
-  var base    = Paipan._dayGetBaseJiazi(year, month, day, isYang);
-  var todayJD = Paipan._dayJulian(year, month, day);
-  var days    = todayJD - base.jd;
-  if (days < 0) days = 0;
+  // ── 步驟1：用日干支查休門宮 ──────────────────────────────
+  // 60甲子每3個一組，共20組，循環對應8宮
+  // 陽遁：坎坤震巽乾兌艮離（循環）
+  // 陰遁：離艮兌乾巽震坤坎（反向）
+  var jz          = Paipan.jiazi();
+  var yangGong8   = ['坎','坤','震','巽','乾','兌','艮','離'];
+  var yinGong8    = ['離','艮','兌','乾','巽','震','坤','坎'];
+  var gong8       = isYang ? yangGong8 : yinGong8;
 
-  // 三日一組，8宮循環
-  var groupIdx   = Math.floor(days / 3) % 8;
-  var xiuGongSeq = isYang ? Paipan.dayEightGuaYang : Paipan.dayEightGuaYin;
-  var xiuGong    = xiuGongSeq[groupIdx];
+  var dayJZIdx    = jz.indexOf(dayGZ);          // 0–59
+  if (dayJZIdx === -1) dayJZIdx = 0;
+  var groupIdx    = Math.floor(dayJZIdx / 3);   // 0–19
+  var xiuGong     = gong8[groupIdx % 8];        // 直接查表
 
-  // 日干陽→順時針布門，陰→逆時針布門
-  var isTGYang = Paipan._dayTGIsYang(dayTG);
+  // ── 步驟2：日干陽順陰逆布八門 ────────────────────────────
   var cw       = Paipan.dayClockwiseEight;
+  var isTGYang = Paipan._dayTGIsYang(dayTG);
   var startIdx = cw.indexOf(xiuGong);
-  if (startIdx === -1) startIdx = 0;
-
-  var result = {};
+  var result   = {};
   for (var i = 0; i < 8; i++) {
     var gongIdx = isTGYang
       ? (startIdx + i) % 8
@@ -341,6 +345,8 @@ Paipan.dayPanDoor = function(year, month, day, hour, minute) {
   result['中'] = '';
   return result;
 };
+
+
 
 // ════════════════════════════════════════════════════════════
 // 【值符值使】
