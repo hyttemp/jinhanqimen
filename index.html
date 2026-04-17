@@ -380,6 +380,10 @@
             <td class="mz-row-hdr">五不遇時</td>
             <td class="mz-val" colspan="2" id="mz-wby">　</td>
           </tr>
+		  <tr>
+		  <td class="mz-row-hdr">喜神(三合方)</td>
+		  <td class="mz-val" colspan="2" id="mz-xishen">　</td>
+		</tr>
           <tr>
             <td class="mz-row-hdr" style="color:#ffffff; text-align:center;">地支條件</td>
             <td class="mz-hdr" style="border:1px solid var(--border);">日</td>
@@ -710,6 +714,29 @@ function renderMingzhu(pan, gz4){
   const wby = pan ? pan.五不遇時 : false;
   document.getElementById('mz-wby').innerHTML = wby ? X : '　';
 
+// ── (4.5) 喜神
+(function(){
+  const td = document.getElementById('mz-xishen');
+  if(!td) return;
+
+  // 取得喜神方位（八卦宮名）
+  const xiShen = pan ? (pan.喜神 || '') : '';
+
+  // 取得三合方條件滿足欄中所有八卦方
+  const condEl = document.getElementById('mz-sanhe-dir-cond');
+  const condText = condEl ? condEl.textContent.trim() : '';
+
+  // condText 內容如「巽　離」，拆出所有單字比對
+  const guaList = ['坎','坤','震','巽','乾','兌','艮','離'];
+  const foundGuas = guaList.filter(function(g){ return condText.includes(g); });
+
+  if(xiShen && foundGuas.includes(xiShen)){
+    td.innerHTML = '<span style="color:var(--teal);font-size:1.1em;">✔</span>';
+  } else {
+    td.textContent = '　';
+  }
+})();
+
   // ── (5) 沖
   if(mingDZ && Paipan.CheckChong){
     const chong     = Paipan.CheckChong(mingDZ);
@@ -950,19 +977,17 @@ function renderRight(pan, hour){
     <div class="mrow"><span class="ml">截路</span><span class="mv warn">${jieStr}</span></div>
      <div class="mrow"><span class="ml">空亡</span><span class="mv warn">${konStr}</span></div>
     <div class="mrow"><span class="ml">五不遇時</span><span class="mv ${wby?'bad':'good'}">${wby?'⚠ 是':'否'}</span></div>
-    <div class="mrow"><span class="ml">天馬（月支）</span><span class="mv">${horse.天馬||'—'}</span></div>
-    <div class="mrow"><span class="ml">丁馬（旬首）</span><span class="mv">${horse.丁馬||'—'}</span></div>
-    <div class="mrow"><span class="ml">驛馬（時支）</span><span class="mv">${horse.驛馬||'—'}</span></div>
+
   </div>`;
 
-  const zf=pan.值符值使||{};
-  rp.innerHTML+=`<div class="r-card">
-    <div class="r-title">◈ 值符值使</div>
-    <div class="mrow"><span class="ml">值符天干</span><span class="mv">${zf.值符天干||'—'}</span></div>
-    <div class="mrow"><span class="ml">值符宮</span><span class="mv">${zf.值符宮||'—'}</span></div>
-    <div class="mrow"><span class="ml">值使門</span><span class="mv">${zf.值使門||'—'}</span></div>
-    <div class="mrow"><span class="ml">日支宮</span><span class="mv">${zf.值使門宮||'—'}</span></div>
-  </div>`;
+  <!-- const zf=pan.值符值使||{}; -->
+  <!-- rp.innerHTML+=`<div class="r-card"> -->
+    <!-- <div class="r-title">◈ 值符值使</div> -->
+    <!-- <div class="mrow"><span class="ml">值符天干</span><span class="mv">${zf.值符天干||'—'}</span></div> -->
+    <!-- <div class="mrow"><span class="ml">值符宮</span><span class="mv">${zf.值符宮||'—'}</span></div> -->
+    <!-- <div class="mrow"><span class="ml">值使門</span><span class="mv">${zf.值使門||'—'}</span></div> -->
+    <!-- <div class="mrow"><span class="ml">日支宮</span><span class="mv">${zf.值使門宮||'—'}</span></div> -->
+  <!-- </div>`; -->
 }
 
 // ── Enter 鍵觸發起盤 ──────────────────────────────────
