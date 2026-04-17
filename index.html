@@ -958,8 +958,8 @@ function renderRight(pan, hour){
 
   const ty=pan.天乙貴人||{};
   let ts=`<div class="r-card"><div class="r-title">★ 天乙貴人</div>`;
-  if(ty.陽貴) ts+=`<div class="mrow"><span class="ml">陽貴</span><span class="mv good">${ty.陽貴.地支}（${ty.陽貴.宮}宮）</span></div>`;
-  if(ty.陰貴) ts+=`<div class="mrow"><span class="ml">陰貴</span><span class="mv good">${ty.陰貴.地支}（${ty.陰貴.宮}宮）</span></div>`;
+  if(ty.陽貴) ts+=`<div class="mrow"><span class="ml">陽貴</span><span class="mv good">${ty.陽貴.地支}時</span></div>`;
+  if(ty.陰貴) ts+=`<div class="mrow"><span class="ml">陰貴</span><span class="mv good">${ty.陰貴.地支}時</span></div>`;
   if(!ty.陽貴&&!ty.陰貴) ts+=`<div class="mrow"><span class="ml" style="color:var(--dim)">查無資料</span></div>`;
   ts+=`</div>`;
   rp.innerHTML+=ts;
@@ -967,13 +967,15 @@ function renderRight(pan, hour){
   const xi   = pan.喜神||'—';
   const wby  = pan.五不遇時;
   const horse= pan.馬星||{};
-  const jlObj   = pan.截路空亡 || {};
-  const jieStr  = Array.isArray(jlObj.截路) ? jlObj.截路.join('、') : '—';
-  const konStr  = Array.isArray(jlObj.空亡)  ? jlObj.空亡.join('、')  : '—';
+	const jlObj   = pan.截路空亡 || {};
+	const jieList = Array.isArray(jlObj.截路) ? jlObj.截路 : [];
+	const konList = Array.isArray(jlObj.空亡)  ? jlObj.空亡  : [];
+	const jieStr  = jieList.length > 0 ? jieList.join('時、') + '時' : '—';
+	const konStr  = konList.length > 0 ? konList.join('時、') + '時' : '—';
 
   rp.innerHTML+=`<div class="r-card">
     <div class="r-title">✦ 擇日輔助資訊</div>
-    <div class="mrow"><span class="ml">喜神方位</span><span class="mv good">${xi}宮</span></div>
+    <div class="mrow"><span class="ml">喜神方位</span><span class="mv good">${xi}方</span></div>
     <div class="mrow"><span class="ml">截路</span><span class="mv warn">${jieStr}</span></div>
      <div class="mrow"><span class="ml">空亡</span><span class="mv warn">${konStr}</span></div>
     <div class="mrow"><span class="ml">五不遇時</span><span class="mv ${wby?'bad':'good'}">${wby?'⚠ 是':'否'}</span></div>
