@@ -585,18 +585,31 @@ Paipan.dayJieLu = function(year, month, day, hour, minute) {
 
 
 // ════════════════════════════════════════════════════════════
-// 【五不遇時】時干剋日干
+// 【五不遇時】時干剋日干（陰陽干分開建表）
+// 甲日遇庚時、乙日遇辛時、丙日遇壬時、丁日遇癸時、戊日遇甲時
+// 己日遇乙時、庚日遇丙時、辛日遇丁時、壬日遇戊時、癸日遇己時
 // ════════════════════════════════════════════════════════════
-Paipan._dayWuBuYuMap = [
-  [['甲','乙'],['庚','辛']],[['丙','丁'],['壬','癸']],
-  [['戊','己'],['甲','乙']],[['庚','辛'],['丙','丁']],
-  [['壬','癸'],['戊','己']]
-];
-Paipan.dayWuBuYu = function(year, month, day, hour, minute) {
-  var gz    = Paipan.getGangzhi(year, month, day, hour, minute);
-  var taboo = Paipan.multiKeyDictGet(Paipan._dayWuBuYuMap, gz[2][0]) || [];
-  return taboo.indexOf(gz[3][0]) !== -1;
+Paipan._dayWuBuYuMap = {
+  '甲': '庚',
+  '乙': '辛',
+  '丙': '壬',
+  '丁': '癸',
+  '戊': '甲',
+  '己': '乙',
+  '庚': '丙',
+  '辛': '丁',
+  '壬': '戊',
+  '癸': '己'
 };
+
+Paipan.dayWuBuYu = function(year, month, day, hour, minute) {
+  var gz      = Paipan.getGangzhi(year, month, day, hour, minute);
+  var dayTG   = gz[2][0];  // 日干
+  var hourTG  = gz[3][0];  // 時干
+  var taboo   = Paipan._dayWuBuYuMap[dayTG];
+  return taboo === hourTG;
+};
+
 
 // ════════════════════════════════════════════════════════════
 // 【空亡】旬首→空亡地支
