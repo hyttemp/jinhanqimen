@@ -67,43 +67,15 @@ var _HAI_MAP = [7, 6, 5, 4, 3, 2, 1, 0, 11, 10, 9, 8];
 
 // 三刑規則（使用地支索引）
 var _XING_RULES = [
-  {
-    type: 'mutual',
-    name: '子卯相刑',
-    members: [0, 3],
-    description: '子卯無禮之刑'
-  },
-  {
-    type: 'triple',
-    name: '寅巳申三刑',
-    members: [2, 5, 8],
-    description: '寅巳申無恩之刑'
-  },
-  {
-    type: 'triple',
-    name: '丑未戌三刑',
-    members: [1, 7, 10],
-    description: '丑未戌持勢之刑'
-  },
-  {
-    type: 'self',
-    name: '辰辰自刑',
-    members: [4, 4],
-    description: '辰自刑'
-  },
-  {
-    type: 'self',
-    name: '酉酉自刑',
-    members: [9, 9],
-    description: '酉自刑'
-  },
-  {
-    type: 'self',
-    name: '亥亥自刑',
-    members: [11, 11],
-    description: '亥自刑'
-  }
+  { type: 'mutual', name: '子卯相刑',   members: [0, 3],    description: '子卯無禮之刑'  },
+  { type: 'triple', name: '寅巳申三刑', members: [2, 5, 8], description: '寅巳申無恩之刑'},
+  { type: 'triple', name: '丑未戌三刑', members: [1, 7, 10],description: '丑未戌持勢之刑'},
+  { type: 'self',   name: '辰辰自刑',   members: [4, 4],    description: '辰自刑'        },
+  { type: 'self',   name: '午午自刑',   members: [6, 6],    description: '午自刑'        },  // ← 補上
+  { type: 'self',   name: '酉酉自刑',   members: [9, 9],    description: '酉自刑'        },
+  { type: 'self',   name: '亥亥自刑',   members: [11, 11],  description: '亥自刑'        },
 ];
+
 
 // 四組三合局（索引）
 var _SAN_HE = [
