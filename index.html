@@ -436,12 +436,75 @@ const SPIN_CFG={
   mingYear:{id:'inp-mingYear',min:1900, max:2100}
 };
 
-// 新的
-function spin(key,d){
-  const c=SPIN_CFG[key],el=document.getElementById(c.id);
-  let v=parseInt(el.value)+d;
-  if(v<c.min)v=c.max; if(v>c.max)v=c.min;
-  el.value=v;
+// ── 判斷每月天數（含閏年）──────────────────────────────
+function daysInMonth(year, month) {
+  return new Date(year, month, 0).getDate();
+}
+
+// ── 帶進退位的 spin ────────────────────────────────────
+function spin(key, d) {
+  // 先讀取所有目前值
+  var y  = parseInt(document.getElementById('inp-year').value)   || 2026;
+  var mo = parseInt(document.getElementById('inp-month').value)  || 1;
+  var dy = parseInt(document.getElementById('inp-day').value)    || 1;
+  var h  = parseInt(document.getElementById('inp-hour').value)   || 0;
+  var mi = parseInt(document.getElementById('inp-minute').value) || 0;
+
+  if (key === 'mingYear') {
+    // 年命獨立處理，不參與進退位
+    var c  = SPIN_CFG['mingYear'];
+    var el = document.getElementById(c.id);
+    var v  = parseInt(el.value) + d;
+    if (v < c.min) v = c.max;
+    if (v > c.max) v = c.min;
+    el.value = v;
+    doRender();
+    return;
+  }
+
+  // 套用本次變動
+  if (key === 'minute') mi += d;
+  if (key === 'hour')   h  += d;
+  if (key === 'day')    dy += d;
+  if (key === 'month')  mo += d;
+  if (key === 'year')   y  += d;
+
+  // ── 分 → 時 進退位 ──
+  if (mi >= 60) { mi -= 60; h += 1; }
+  if (mi < 0)   { mi += 60; h -= 1; }
+
+  // ── 時 → 日 進退位 ──
+  if (h >= 24) { h -= 24; dy += 1; }
+  if (h < 0)   { h += 24; dy -= 1; }
+
+  // ── 日 → 月 進退位 ──
+  // 先處理「日超過當月天數」
+  while (dy > daysInMonth(y, mo)) {
+    dy -= daysInMonth(y, mo);
+    mo += 1;
+    if (mo > 12) { mo = 1; y += 1; }
+  }
+  // 再處理「日退到 0 以下」
+  while (dy < 1) {
+    mo -= 1;
+    if (mo < 1) { mo = 12; y -= 1; }
+    dy += daysInMonth(y, mo);
+  }
+
+  // ── 月 → 年 進退位 ──
+  if (mo > 12) { mo -= 12; y += 1; }
+  if (mo < 1)  { mo += 12; y -= 1; }
+
+  // ── 年份邊界保護 ──
+  y = Math.max(1900, Math.min(2100, y));
+
+  // 寫回 DOM
+  document.getElementById('inp-year').value   = y;
+  document.getElementById('inp-month').value  = mo;
+  document.getElementById('inp-day').value    = dy;
+  document.getElementById('inp-hour').value   = h;
+  document.getElementById('inp-minute').value = mi;
+
   doRender();
 }
 
