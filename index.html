@@ -5,201 +5,98 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>金函玉鏡 — 日家奇門</title>
 <style>
-  :root{
-    --bg:#e8f5e9;
-    --bg2:#f1faf2;
-    --bg3:#dceede;
-    --border:#7db88a;
-    --gold:#b8860b;
-    --gold2:#8a6500;
-    --teal:#1a7a55;
-    --blue:#1a5a9a;
-    --red:#c03030;
-    --dim:#5a8a65;
-    --text:#1a3a22;
-    --text2:#3a6a45;
-  }
-  *{box-sizing:border-box;margin:0;padding:0;}
-  body{background:var(--bg);color:var(--text);font-family:'Noto Serif TC','SimSun',serif;min-height:100vh;padding:18px 14px 40px;}
-  .page-title{text-align:center;color:var(--gold2);font-size:2rem;letter-spacing:.3em;margin-bottom:16px;text-shadow:0 0 12px rgba(180,140,40,.25);}
-
-  .input-panel{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin-bottom:12px;}
-  .input-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:10px;}
-  .spin-group{display:flex;flex-direction:column;align-items:center;gap:3px;}
-  .spin-label{font-size:1.2rem;color:var(--text2);letter-spacing:.1em;}
-  .spin-ctrl{display:flex;align-items:center;gap:2px;}
-  .spin-btn{background:var(--bg3);border:1px solid var(--border);color:var(--gold);width:22px;height:22px;border-radius:4px;cursor:pointer;font-size:1.2rem;display:flex;align-items:center;justify-content:center;}
-  .spin-btn:hover{background:#c8e6c9;}
-  .spin-val{background:var(--bg3);border:1px solid var(--border);color:var(--gold2);text-align:center;font-size:1.2rem;width:55px;height:28px;border-radius:4px;outline:none;}
-  .spin-val.wide{width:64px;}
-
-  .action-row{display:flex;flex-wrap:wrap;gap:8px;align-items:flex-end;}
-  .btn-group{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
-  .btn{padding:7px 20px;border-radius:6px;border:none;cursor:pointer;font-size:1.2rem;font-family:inherit;letter-spacing:.1em;}
-  .btn-primary{background:linear-gradient(135deg,#2e7d32,#43a047);color:#f1faf2;border:1px solid #388e3c;}
-  .btn-secondary{background:linear-gradient(135deg,#1565c0,#1976d2);color:#e3f2fd;border:1px solid #1976d2;}
-
-  .spin-label.mingzhu{color:#1976d2;}
-  .spin-val.mingzhu{border-color:#1976d2;color:#1976d2;}
-  .spin-btn.mingzhu{border-color:#1976d2;color:#1976d2;}
-  .spin-btn.mingzhu:hover{background:#ead5f7;}
-
-
-
-  .info-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:8px 12px;   display: flex;
-  flex-direction: column;}
-  .ic-title{font-size:1.0rem;color:var(--dim);letter-spacing:.12em;margin-bottom:4px;}
-  .ic-val{font-size:1.1rem;color:var(--gold2);line-height:1.6;}
-
-  .sizhu-card{
-    background:var(--bg2);
-    border:1px solid var(--border);
-    border-radius:8px;
-    padding:8px 12px;
-    display:flex;
-    flex-direction:column;
-  }
-  .sizhu-card .ic-title{font-size:1.0rem;color:var(--dim);letter-spacing:.12em;margin-bottom:6px;}
-  .sizhu-inner{
-    display:flex;
-    gap:6px;
-    flex:1;
-    align-items:center;
-    justify-content:space-around;
-  }
-  .sizhu-col{display:flex;flex-direction:column;align-items:center;gap:4px;}
-  .sizhu-col .lbl{font-size:.85rem;color:var(--dim);letter-spacing:.05em;}
-  .sizhu-col .gz-vert{display:flex;flex-direction:column;align-items:center;gap:2px;}
-  .sizhu-col .gz-tg{font-size:1.4rem;line-height:1.2;}
-  .sizhu-col .gz-dz{font-size:1.4rem;line-height:1.2;}
-
-
-  .palace-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;}
-
-  .p-cell{background:var(--bg2);border:1.5px solid var(--border);border-radius:8px;padding:10px 7px;min-height:140px;position:relative;}
-  .p-cell.c-ctr{background:#d8f0dc;border-color:#7db88a;}
-  .p-cell.c-zf{border-color:var(--gold);box-shadow:0 0 10px rgba(180,140,40,.35);}
-  .p-gua{position:absolute;top:5px;left:8px;font-size:1.5rem;color:var(--dim);}
-  .p-num{position:absolute;top:5px;right:8px;font-size:1.5rem;color:var(--dim);}
-  .p-body{margin-top:20px;display:flex;flex-direction:column;gap:3px;align-items:center;}
-
-  .ctag{font-size:1.5rem;padding:2px 9px;border-radius:4px;display:inline-block;margin:2px 0;}
-  .tj{background:#c8f0d8;color:#1a6a35;border:1px solid #7acd9a;}
-  .tx{background:transparent;color:var(--text);border:1px solid transparent;}
-  .tp{background:transparent;color:var(--text);border:1px solid transparent;}
-  .tg{background:#e8e8ff;color:#3a3aaa;border:1px solid #9a9add;font-size:.76rem;}
-  .tzf{background:#cce0ff;color:#1a4a9a;border:1px solid #6a9add;font-size:.74rem;}
-  .p-earth{font-size:1rem;margin-top:2px;}
-  .p-heaven{font-size:1rem;color:var(--blue);}
-
-  .below-palace{margin-top:10px;display:flex;flex-direction:column;gap:8px;}
-  .ju-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-  .kong-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-  .info-chip{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:8px 12px;}
-  .info-chip .k-lbl{font-size:1.0rem;color:var(--dim);margin-bottom:2px;}
-  .info-chip .k-val{font-size:1.1rem;color:#c03030;}
-  .info-chip .ic-val{font-size:1.1rem;color:var(--gold2);}
-
-  .wuxing-row{display:flex;gap:5px;}
-  .wx-chip{flex:1;background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:6px 4px;text-align:center;}
-  .wx-chip .wx-nm{font-size:1.2rem;margin-bottom:2px;}
-  .wx-chip .wx-st{font-size:1.2rem;}
-  .s-wang{color:#b8860b;font-weight:bold;}.s-xiang{color:#1a7a55;}.s-xiu{color:#1a5a9a;}.s-qiu{color:#7a3a9a;}.s-si{color:#7a7a7a;}
-
-  .mingzhu-table{
-    width:100%;
-    border-collapse:collapse;
-    background:var(--bg2);
-    font-size:1rem;
-  }
-  .mingzhu-table th,
-  .mingzhu-table td{
-    border:1px solid var(--border);
-    padding:6px 10px;
-    text-align:center;
-    vertical-align:middle;
-  }
-  .mingzhu-table .mz-hdr{
-    background:#4caf50;
-    color:#fff;
-    font-weight:bold;
-    letter-spacing:.1em;
-  }
-  .mingzhu-table .mz-row-hdr{
-    background:#81c784;
-    color:#1a3a22;
-    font-weight:bold;
-    text-align:left;
-    white-space:nowrap;
-  }
-  .mingzhu-table .mz-val{color:var(--gold2);min-width:60px;}
-  .mz-x{color:var(--red);font-weight:bold;font-size:1.1rem;}
-
-  .hdt tr.cur-hour td{
-    background:#fff9c4;
-    font-weight:bold;
-  }
-
-  .right-panel{flex:1 1 320px;min-width:240px;display:flex;flex-direction:column;gap:10px;}
-  .r-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:12px 16px;}
-  .r-card.no-pad{padding:0;overflow:hidden;}
-  .r-title{font-size:1rem;color:var(--gold);letter-spacing:.15em;margin-bottom:10px;border-bottom:1px solid var(--border);padding-bottom:6px;}
-  .hdt{width:100%;border-collapse:collapse;font-size:1rem;}
-  .hdt th{color:var(--dim);font-weight:normal;padding:4px 6px;text-align:left;border-bottom:1px solid var(--border);}
-  .hdt td{padding:4px 6px;border-bottom:1px solid #c8e6c9;}
-  .hdt tr:last-child td{border-bottom:none;}
-  .huang{color:#b8860b;font-weight:bold;}.hei{color:#5a6a7a;}
-  .mrow{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid #c8e6c9;font-size:1rem;}
-  .mrow:last-child{border-bottom:none;}
-  .ml{color:var(--text2);}.mv{color:var(--gold2);}
-  .mv.bad{color:var(--red);}.mv.good{color:var(--teal);}.mv.warn{color:#b8860b;}
-  .wx-mu{color:#2e7d32;}.wx-huo{color:#c62828;}.wx-tu{color:#e65100;}.wx-jin{color:#b8860b;}.wx-shui{color:#1565c0;}
-
+:root{
+  --bg:#e8f5e9;--bg2:#f1faf2;--bg3:#dceede;--border:#7db88a;
+  --gold:#b8860b;--gold2:#8a6500;--teal:#1a7a55;--blue:#1a5a9a;
+  --red:#c03030;--dim:#5a8a65;--text:#1a3a22;--text2:#3a6a45;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Noto Serif TC','SimSun',serif;min-height:100vh;padding:18px 14px 40px}
+.page-title{text-align:center;color:var(--gold2);font-size:2rem;letter-spacing:.3em;margin-bottom:16px;text-shadow:0 0 12px rgba(180,140,40,.25)}
+.input-panel{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin-bottom:12px}
+.input-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:10px}
+.spin-group,.select-group{display:flex;flex-direction:column;align-items:center;gap:3px}
+.spin-label,.select-label{font-size:1.2rem;color:var(--text2);letter-spacing:.1em}
+.spin-ctrl{display:flex;align-items:center;gap:2px}
+.spin-btn{background:var(--bg3);border:1px solid var(--border);color:var(--gold);width:22px;height:22px;border-radius:4px;cursor:pointer;font-size:1.2rem;display:flex;align-items:center;justify-content:center}
+.spin-btn:hover{background:#c8e6c9}
+.spin-val{background:var(--bg3);border:1px solid var(--border);color:var(--gold2);text-align:center;font-size:1.2rem;width:55px;height:28px;border-radius:4px;outline:none}
+.spin-val.wide{width:64px}
+.btn{padding:7px 20px;border-radius:6px;border:none;cursor:pointer;font-size:1.2rem;font-family:inherit;letter-spacing:.1em}
+.btn-secondary{background:linear-gradient(135deg,#1565c0,#1976d2);color:#e3f2fd;border:1px solid #1976d2}
+.spin-label.mingzhu{color:#1976d2}
+.spin-val.mingzhu{border-color:#1976d2;color:#1976d2}
+.spin-btn.mingzhu{border-color:#1976d2;color:#1976d2}
+.spin-btn.mingzhu:hover{background:#ead5f7}
+.info-card,.sizhu-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:8px 12px;display:flex;flex-direction:column}
+.ic-title{font-size:1rem;color:var(--dim);letter-spacing:.12em;margin-bottom:4px}
+.ic-val{font-size:1.1rem;color:var(--gold2);line-height:1.6}
+.sizhu-card .ic-title{margin-bottom:6px}
+.sizhu-inner{display:flex;gap:6px;flex:1;align-items:center;justify-content:space-around}
+.sizhu-col{display:flex;flex-direction:column;align-items:center;gap:4px}
+.sizhu-col .lbl{font-size:.85rem;color:var(--dim);letter-spacing:.05em}
+.sizhu-col .gz-vert{display:flex;flex-direction:column;align-items:center;gap:2px}
+.sizhu-col .gz-tg,.sizhu-col .gz-dz{font-size:1.4rem;line-height:1.2}
+.palace-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:4px}
+.p-cell{background:var(--bg2);border:1.5px solid var(--border);border-radius:8px;padding:10px 7px;min-height:140px;position:relative}
+.p-cell.c-ctr{background:#d8f0dc;border-color:#7db88a}
+.p-cell.c-zf{border-color:var(--gold);box-shadow:0 0 10px rgba(180,140,40,.35)}
+.p-gua{position:absolute;top:5px;left:8px;font-size:1.5rem;color:var(--dim)}
+.p-num{position:absolute;top:5px;right:8px;font-size:1.5rem;color:var(--dim)}
+.p-body{margin-top:20px;display:flex;flex-direction:column;gap:3px;align-items:center}
+.ctag{font-size:1.5rem;padding:2px 9px;border-radius:4px;display:inline-block;margin:2px 0}
+.tj{background:#c8f0d8;color:#1a6a35;border:1px solid #7acd9a}
+.tx,.tp{background:transparent;color:var(--text);border:1px solid transparent}
+.tg{background:#e8e8ff;color:#3a3aaa;border:1px solid #9a9add;font-size:.76rem}
+.tzf{background:#cce0ff;color:#1a4a9a;border:1px solid #6a9add;font-size:.74rem}
+.p-earth{font-size:1rem;margin-top:2px}
+.p-heaven{font-size:1rem;color:var(--blue)}
+.below-palace{margin-top:10px;display:flex;flex-direction:column;gap:8px}
+.ju-row,.kong-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.info-chip{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:8px 12px}
+.info-chip .k-lbl{font-size:1rem;color:var(--dim);margin-bottom:2px}
+.info-chip .k-val{font-size:1.1rem;color:var(--red)}
+.info-chip .ic-val{font-size:1.1rem;color:var(--gold2)}
+.wuxing-row{display:flex;gap:5px}
+.wx-chip{flex:1;background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:6px 4px;text-align:center}
+.wx-chip .wx-nm{font-size:1.2rem;margin-bottom:2px}
+.wx-chip .wx-st{font-size:1.2rem}
+.s-wang{color:#b8860b;font-weight:bold}.s-xiang{color:#1a7a55}.s-xiu{color:#1a5a9a}.s-qiu{color:#7a3a9a}.s-si{color:#7a7a7a}
+.mingzhu-table{width:100%;border-collapse:collapse;background:var(--bg2);font-size:1rem}
+.mingzhu-table th,.mingzhu-table td{border:1px solid var(--border);padding:6px 10px;text-align:center;vertical-align:middle}
+.mingzhu-table .mz-hdr{background:#4caf50;color:#fff;font-weight:bold;letter-spacing:.1em}
+.mingzhu-table .mz-row-hdr{background:#81c784;color:#1a3a22;font-weight:bold;text-align:left;white-space:nowrap}
+.mingzhu-table .mz-val{color:var(--gold2);min-width:60px}
+.mz-x{color:var(--red);font-weight:bold;font-size:1.1rem}
+.hdt tr.cur-hour td{background:#fff9c4;font-weight:bold}
+.right-panel{flex:1 1 320px;min-width:240px;display:flex;flex-direction:column;gap:10px}
+.r-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:12px 16px}
+.r-card.no-pad{padding:0;overflow:hidden}
+.r-title{font-size:1rem;color:var(--gold);letter-spacing:.15em;margin-bottom:10px;border-bottom:1px solid var(--border);padding-bottom:6px}
+.hdt{width:100%;border-collapse:collapse;font-size:1rem}
+.hdt th{color:var(--dim);font-weight:normal;padding:4px 6px;text-align:left;border-bottom:1px solid var(--border)}
+.hdt td{padding:4px 6px;border-bottom:1px solid #c8e6c9}
+.hdt tr:last-child td{border-bottom:none}
+.huang{color:#b8860b;font-weight:bold}.hei{color:#5a6a7a}
+.mrow{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid #c8e6c9;font-size:1rem}
+.mrow:last-child{border-bottom:none}
+.ml{color:var(--text2)}.mv{color:var(--gold2)}
+.mv.bad{color:var(--red)}.mv.good{color:var(--teal)}.mv.warn{color:#b8860b}
+.wx-mu{color:#2e7d32}.wx-huo{color:#c62828}.wx-tu{color:#e65100}.wx-jin{color:#b8860b}.wx-shui{color:#1565c0}
+.two-col-layout{display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap}
+.left-col{flex:1 1 50%;min-width:min(520px,100%);display:flex;flex-direction:column;gap:8px}
+.info-bar-left{display:grid;grid-template-columns:1fr 1fr 2fr;gap:8px}
+#i-lunar{text-align:center;display:flex;align-items:center;justify-content:center;flex:1}
 @media(max-width:660px){
-  .two-col-layout{flex-direction:column;}
-  .left-col{width:100%;min-width:unset;}
-  .info-bar-left{grid-template-columns:1fr 1fr;}
-  .info-bar-left .sizhu-card{grid-column:1/-1;}
-  .right-panel{width:100%;min-width:unset;}
-  .action-row{flex-direction:column;align-items:flex-start;}
+  .two-col-layout{flex-direction:column}
+  .left-col{width:100%;min-width:unset}
+  .info-bar-left{grid-template-columns:1fr 1fr}
+  .info-bar-left .sizhu-card{grid-column:1/-1}
+  .right-panel{width:100%;min-width:unset}
 }
-
-/* ── 整體雙欄版面 ── */
-.two-col-layout{
-  display:flex;
-  gap:14px;
-  align-items:flex-start;
-  flex-wrap:wrap;
-}
-.left-col{
-  flex:1 1 50%;
-  min-width:min(520px,100%);
-  display:flex;
-  flex-direction:column;
-  gap:8px;
-}
-.info-bar-left{
-  display:grid;
-  grid-template-columns:1fr 1fr 2fr;
-  gap:8px;
-}
-.palace-grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:4px;
-}
-
-#i-lunar {
-  text-align: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex: 1;
-}
-
-  input[type="number"]::-webkit-inner-spin-button,
-  input[type="number"]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0;}
-  input[type="number"]{-moz-appearance:textfield;}
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+input[type="number"]{-moz-appearance:textfield}
 </style>
 </head>
 <body>
@@ -207,8 +104,7 @@
 
 <div class="input-panel">
   <div class="input-row">
-    <!-- ★ 年命移到這裡，放在年的左邊 -->
-    <div class="spin-group"  style="margin-right: 24px;">
+    <div class="spin-group" style="margin-right:24px">
       <div class="spin-label mingzhu">年　命</div>
       <div class="spin-ctrl">
         <button class="spin-btn mingzhu" onclick="spin('mingYear',-1)">−</button>
@@ -216,7 +112,6 @@
         <button class="spin-btn mingzhu" onclick="spin('mingYear',+1)">+</button>
       </div>
     </div>
-
     <div class="spin-group"><div class="spin-label">年</div>
       <div class="spin-ctrl">
         <button class="spin-btn" onclick="spin('year',-1)">−</button>
@@ -253,22 +148,13 @@
       </div>
     </div>
     <div class="spin-group">
-      <div class="spin-label" style="visibility:hidden;">按鈕</div>
-      <div class="btn-group">
-        <button class="btn btn-secondary" onclick="useNow()">◷ 目前時間</button>
-      </div>
+      <div class="spin-label" style="visibility:hidden">按鈕</div>
+      <button class="btn btn-secondary" onclick="useNow()">◷ 目前時間</button>
     </div>
   </div>
-
-  <!-- ★ 原本的 action-row 整個刪除 -->
 </div>
 
-
-
-<!-- ── 整體雙欄版面 ── -->
 <div class="two-col-layout">
-
-  <!-- 左欄：農曆/節氣/四柱 + 九宮格 + 底部資訊 -->
   <div class="left-col">
     <div class="info-bar-left">
       <div class="info-card">
@@ -282,81 +168,32 @@
       <div class="sizhu-card">
         <div class="ic-title">四　柱</div>
         <div class="sizhu-inner">
-          <div class="sizhu-col">
-            <div class="lbl">年</div>
-            <div class="gz-vert">
-              <div class="gz-tg" id="sz-y-tg">—</div>
-              <div class="gz-dz" id="sz-y-dz"></div>
-            </div>
-          </div>
-          <div class="sizhu-col">
-            <div class="lbl">月</div>
-            <div class="gz-vert">
-              <div class="gz-tg" id="sz-m-tg">—</div>
-              <div class="gz-dz" id="sz-m-dz"></div>
-            </div>
-          </div>
-          <div class="sizhu-col">
-            <div class="lbl">日</div>
-            <div class="gz-vert">
-              <div class="gz-tg" id="sz-d-tg">—</div>
-              <div class="gz-dz" id="sz-d-dz"></div>
-            </div>
-          </div>
-          <div class="sizhu-col">
-            <div class="lbl">時</div>
-            <div class="gz-vert">
-              <div class="gz-tg" id="sz-h-tg">—</div>
-              <div class="gz-dz" id="sz-h-dz"></div>
-            </div>
-          </div>
+          <div class="sizhu-col"><div class="lbl">年</div><div class="gz-vert"><div class="gz-tg" id="sz-y-tg">—</div><div class="gz-dz" id="sz-y-dz"></div></div></div>
+          <div class="sizhu-col"><div class="lbl">月</div><div class="gz-vert"><div class="gz-tg" id="sz-m-tg">—</div><div class="gz-dz" id="sz-m-dz"></div></div></div>
+          <div class="sizhu-col"><div class="lbl">日</div><div class="gz-vert"><div class="gz-tg" id="sz-d-tg">—</div><div class="gz-dz" id="sz-d-dz"></div></div></div>
+          <div class="sizhu-col"><div class="lbl">時</div><div class="gz-vert"><div class="gz-tg" id="sz-h-tg">—</div><div class="gz-dz" id="sz-h-dz"></div></div></div>
         </div>
       </div>
     </div>
-
-    <div class="palace-grid" id="palace-grid" style="margin-top:8px;">
-      <div style="grid-column:1/-1;text-align:center;color:var(--dim);padding:40px 0;font-size:.82rem;letter-spacing:.15em;">按「起盤」顯示九宮圖</div>
+    <div class="palace-grid" id="palace-grid" style="margin-top:8px">
+      <div style="grid-column:1/-1;text-align:center;color:var(--dim);padding:40px 0;font-size:.82rem;letter-spacing:.15em">按「起盤」顯示九宮圖</div>
     </div>
-
     <div class="below-palace">
       <div class="ju-row">
-        <div class="info-chip">
-          <div class="k-lbl">排　局</div>
-          <div class="ic-val" id="i-ju">—</div>
-        </div>
-        <div class="info-chip">
-          <div class="k-lbl">旬　首</div>
-          <div class="ic-val" id="i-xun">—</div>
-        </div>
+        <div class="info-chip"><div class="k-lbl">排　局</div><div class="ic-val" id="i-ju">—</div></div>
+        <div class="info-chip"><div class="k-lbl">旬　首</div><div class="ic-val" id="i-xun">—</div></div>
       </div>
       <div class="kong-row">
-        <div class="info-chip">
-          <div class="k-lbl">日空（日柱旬首）</div>
-          <div class="k-val" id="k-day">—</div>
-        </div>
-        <div class="info-chip">
-          <div class="k-lbl">時空（時柱旬首）</div>
-          <div class="k-val" id="k-hour">—</div>
-        </div>
+        <div class="info-chip"><div class="k-lbl">日空（日柱旬首）</div><div class="k-val" id="k-day">—</div></div>
+        <div class="info-chip"><div class="k-lbl">時空（時柱旬首）</div><div class="k-val" id="k-hour">—</div></div>
       </div>
-      <div class="wuxing-row">
-        <div class="wx-chip"><div class="wx-nm wx-mu">木</div><div class="wx-st" id="wx-mu">—</div></div>
-        <div class="wx-chip"><div class="wx-nm wx-huo">火</div><div class="wx-st" id="wx-huo">—</div></div>
-        <div class="wx-chip"><div class="wx-nm wx-tu">土</div><div class="wx-st" id="wx-tu">—</div></div>
-        <div class="wx-chip"><div class="wx-nm wx-jin">金</div><div class="wx-st" id="wx-jin">—</div></div>
-        <div class="wx-chip"><div class="wx-nm wx-shui">水</div><div class="wx-st" id="wx-shui">—</div></div>
-      </div>
+      <div class="wuxing-row" id="wuxing-row"></div>
     </div>
   </div>
-
-  <!-- 右欄：年命表格 + 黃黑道 + 天乙 + 擇日 -->
   <div class="right-panel" id="right-panel">
-    <div style="text-align:center;color:var(--dim);font-size:.82rem;padding:40px 0;">按「起盤」顯示資料</div>
+    <div style="text-align:center;color:var(--dim);font-size:.82rem;padding:40px 0">按「起盤」顯示資料</div>
   </div>
-
 </div>
-<!-- end two-col-layout -->
-
 
 <script src="./src/paipan_standalone_astro.js"></script>
 <script src="./src/paipan_standalone_lunar.js"></script>
@@ -364,563 +201,301 @@
 <script src="./src/paipan_qimen_addon.js"></script>
 <script src="./src/paipan_qimen_day.js"></script>
 <script>
+/* ── 常數 ── */
 const GRID_POS = ['巽','離','坤','震','中','兌','艮','坎','乾'];
 const GUA_NUM  = {坎:1,坤:2,震:3,巽:4,中:5,乾:6,兌:7,艮:8,離:9};
+const DZ_LIST  = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+const TG_LIST  = ['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
 
-const DZ_LIST = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
-const DZ_TIME = {
-  子:'23:00–01:00',丑:'01:00–03:00',寅:'03:00–05:00',卯:'05:00–07:00',
-  辰:'07:00–09:00',巳:'09:00–11:00',午:'11:00–13:00',未:'13:00–15:00',
-  申:'15:00–17:00',酉:'17:00–19:00',戌:'19:00–21:00',亥:'21:00–23:00'
-};
-const TG_LIST = ['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
+/* DZ_TIME 由函式生成 */
+const _DZT = ['23:00','01:00','03:00','05:00','07:00','09:00','11:00','13:00','15:00','17:00','19:00','21:00'];
+const getDZTime = dz => { const i=DZ_LIST.indexOf(dz); return i<0?'':_DZT[i]+'–'+_DZT[(i+1)%12]; };
 
 const DAY_CN = ['','初一','初二','初三','初四','初五','初六','初七','初八','初九','初十',
   '十一','十二','十三','十四','十五','十六','十七','十八','十九','二十',
   '廿一','廿二','廿三','廿四','廿五','廿六','廿七','廿八','廿九','三十'];
 
-const KONG_MAP = {
-  甲子:'戌亥',甲戌:'申酉',甲申:'午未',甲午:'辰巳',甲辰:'寅卯',甲寅:'子丑'
+const KONG_MAP = {甲子:'戌亥',甲戌:'申酉',甲申:'午未',甲午:'辰巳',甲辰:'寅卯',甲寅:'子丑'};
+const STAR_JX  = {太乙:'吉',攝提:'凶',軒轅:'平',招搖:'平',天符:'凶',青龍:'吉',咸池:'凶',太陰:'吉',天乙:'吉'};
+const DOOR_JX  = {休:'吉',生:'吉',傷:'凶',杜:'凶',景:'平',死:'凶',驚:'凶',開:'吉'};
+const GUA_BG   = {
+  坎:'linear-gradient(-225deg,#5D9FFF 0%,#B8DCFF 48%,#6BBBFF 100%)',
+  兌:'linear-gradient(135deg,#ff9a44 0%,#ffe0b2 50%,#e65c00 100%)',
+  乾:'linear-gradient(135deg,#ff9a44 0%,#ffe0b2 50%,#e65c00 100%)',
+  震:'linear-gradient(135deg,#39F3BB 0%,#DFFFCD 50%,#2dd4a0 100%)',
+  巽:'linear-gradient(135deg,#39F3BB 0%,#DFFFCD 50%,#2dd4a0 100%)',
+  離:'linear-gradient(135deg,#e87878 0%,#f7a8a8 50%,#d04545 100%)',
+  艮:'linear-gradient(135deg,#c9954a 0%,#eacda3 50%,#c9954a 100%)',
+  坤:'linear-gradient(135deg,#c9954a 0%,#eacda3 50%,#c9954a 100%)'
 };
+const HIDDEN_GODS = new Set(['九天','九地','玄武','白虎','螣蛇','勾陳','朱雀','六合','太陰','值符']);
+const WX5         = ['木','火','土','金','水'];
+const WX_CLS      = {木:'wx-mu',火:'wx-huo',土:'wx-tu',金:'wx-jin',水:'wx-shui'};
+const STATE_CLS   = {旺:'s-wang',相:'s-xiang',休:'s-xiu',囚:'s-qiu',死:'s-si'};
+const DZ_WANG     = {寅:'木',卯:'木',巳:'火',午:'火',申:'金',酉:'金',亥:'水',子:'水',辰:'土',戌:'土',丑:'土',未:'土'};
 
-const STAR_JX = {太乙:'吉',攝提:'凶',軒轅:'平',招搖:'平',天符:'凶',青龍:'吉',咸池:'凶',太陰:'吉',天乙:'吉'};
-const DOOR_JX = {休:'吉',生:'吉',傷:'凶',杜:'凶',景:'平',死:'凶',驚:'凶',開:'吉'};
+/* ── 工具函式 ── */
+const $ = id => document.getElementById(id);
+const jxCls = jx => ({吉:'tj',凶:'tx',平:'tp'}[jx]||'tp');
+const tgCls = tg => (!tg||!Paipan.tgWuxing)?'':WX_CLS[Paipan.tgWuxing[tg]]||'';
+const dzCls = dz => (!dz||!Paipan.dzWuxing)?'':WX_CLS[Paipan.dzWuxing[dz]]||'';
 
-function jxCls(jx){ return {吉:'tj',凶:'tx',平:'tp'}[jx]||'tp'; }
-
-const DZ_WANG = {
-  寅:'木',卯:'木',巳:'火',午:'火',申:'金',酉:'金',
-  亥:'水',子:'水',辰:'土',戌:'土',丑:'土',未:'土'
-};
-const WX5 = ['木','火','土','金','水'];
-
-function calcWxStates(monthDZ){
-  const wang = DZ_WANG[monthDZ] || '土';
-  const wi   = WX5.indexOf(wang);
-  const r = {};
-  r[wang]              = '旺';
-  r[WX5[(wi+1)%5]]     = '相';
-  r[WX5[(wi+4)%5]]     = '休';
-  r[WX5[(wi+3)%5]]     = '囚';
-  r[WX5[(wi+2)%5]]     = '死';
-  return r;
-}
-const STATE_CLS = {旺:'s-wang',相:'s-xiang',休:'s-xiu',囚:'s-qiu',死:'s-si'};
-
-function tgCls(tg){
-  if(!tg||!Paipan.tgWuxing) return '';
-  return {木:'wx-mu',火:'wx-huo',土:'wx-tu',金:'wx-jin',水:'wx-shui'}[Paipan.tgWuxing[tg]]||'';
-}
-function dzCls(dz){
-  if(!dz||!Paipan.dzWuxing) return '';
-  return {木:'wx-mu',火:'wx-huo',土:'wx-tu',金:'wx-jin',水:'wx-shui'}[Paipan.dzWuxing[dz]]||'';
+/* setEl：快速設定元素 innerHTML 或 textContent */
+function setEl(id, html, isHtml=true){
+  const el=$( id); if(!el)return;
+  if(isHtml) el.innerHTML=html; else el.textContent=html;
 }
 
 function getXunHead(gz){
   const jz=Paipan.jiazi(), idx=jz.indexOf(gz);
-  if(idx===-1) return null;
-  return jz[Math.floor(idx/10)*10];
+  return idx===-1?null:jz[Math.floor(idx/10)*10];
+}
+function hourToDZIndex(h){ return h===23?0:Math.floor((h+1)/2)%12; }
+function daysInMonth(y,m){ return new Date(y,m,0).getDate(); }
+function extractDZ(gz){ if(gz&&gz.length>=2){const d=gz[1];if(DZ_LIST.includes(d))return d;} return null; }
+
+function calcWxStates(mDZ){
+  const wang=DZ_WANG[mDZ]||'土', wi=WX5.indexOf(wang), r={};
+  r[wang]='旺'; r[WX5[(wi+1)%5]]='相'; r[WX5[(wi+4)%5]]='休';
+  r[WX5[(wi+3)%5]]='囚'; r[WX5[(wi+2)%5]]='死';
+  return r;
 }
 
-function hourToDZIndex(hour){
-  if(hour === 23) return 0;
-  return Math.floor((hour + 1) / 2) % 12;
-}
-
-const SPIN_CFG={
-  year:    {id:'inp-year',    min:1900, max:2100},
-  month:   {id:'inp-month',   min:1,    max:12},
-  day:     {id:'inp-day',     min:1,    max:31},
-  hour:    {id:'inp-hour',    min:0,    max:23},
-  minute:  {id:'inp-minute',  min:0,    max:59},
-  mingYear:{id:'inp-mingYear',min:1900, max:2100}
-};
-
-// ── 判斷每月天數（含閏年）──────────────────────────────
-function daysInMonth(year, month) {
-  return new Date(year, month, 0).getDate();
-}
-
-// ── 帶進退位的 spin ────────────────────────────────────
-function spin(key, d) {
-  // 先讀取所有目前值
-  var y  = parseInt(document.getElementById('inp-year').value)   || 2026;
-  var mo = parseInt(document.getElementById('inp-month').value)  || 1;
-  var dy = parseInt(document.getElementById('inp-day').value)    || 1;
-  var h  = parseInt(document.getElementById('inp-hour').value)   || 0;
-  var mi = parseInt(document.getElementById('inp-minute').value) || 0;
-
-  if (key === 'mingYear') {
-    // 年命獨立處理，不參與進退位
-    var c  = SPIN_CFG['mingYear'];
-    var el = document.getElementById(c.id);
-    var v  = parseInt(el.value) + d;
-    if (v < c.min) v = c.max;
-    if (v > c.max) v = c.min;
-    el.value = v;
-    doRender();
-    return;
+/* ── Spin ── */
+function spin(key,d){
+  let y=+$('inp-year').value||2026, mo=+$('inp-month').value||1,
+      dy=+$('inp-day').value||1,   h=+$('inp-hour').value||0,
+      mi=+$('inp-minute').value||0;
+  if(key==='mingYear'){
+    const el=$('inp-mingYear'), v=(+el.value||2026)+d;
+    el.value=v<1900?2100:v>2100?1900:v;
+    doRender(); return;
   }
-
-  // 套用本次變動
-  if (key === 'minute') mi += d;
-  if (key === 'hour')   h  += d;
-  if (key === 'day')    dy += d;
-  if (key === 'month')  mo += d;
-  if (key === 'year')   y  += d;
-
-  // ── 分 → 時 進退位 ──
-  if (mi >= 60) { mi -= 60; h += 1; }
-  if (mi < 0)   { mi += 60; h -= 1; }
-
-  // ── 時 → 日 進退位 ──
-  if (h >= 24) { h -= 24; dy += 1; }
-  if (h < 0)   { h += 24; dy -= 1; }
-
-  // ── 日 → 月 進退位 ──
-  // 先處理「日超過當月天數」
-  while (dy > daysInMonth(y, mo)) {
-    dy -= daysInMonth(y, mo);
-    mo += 1;
-    if (mo > 12) { mo = 1; y += 1; }
-  }
-  // 再處理「日退到 0 以下」
-  while (dy < 1) {
-    mo -= 1;
-    if (mo < 1) { mo = 12; y -= 1; }
-    dy += daysInMonth(y, mo);
-  }
-
-  // ── 月 → 年 進退位 ──
-  if (mo > 12) { mo -= 12; y += 1; }
-  if (mo < 1)  { mo += 12; y -= 1; }
-
-  // ── 年份邊界保護 ──
-  y = Math.max(1900, Math.min(2100, y));
-
-  // 寫回 DOM
-  document.getElementById('inp-year').value   = y;
-  document.getElementById('inp-month').value  = mo;
-  document.getElementById('inp-day').value    = dy;
-  document.getElementById('inp-hour').value   = h;
-  document.getElementById('inp-minute').value = mi;
-
+  if(key==='minute')mi+=d; if(key==='hour')h+=d;
+  if(key==='day')dy+=d;    if(key==='month')mo+=d; if(key==='year')y+=d;
+  if(mi>=60){mi-=60;h++;} if(mi<0){mi+=60;h--;}
+  if(h>=24){h-=24;dy++;}  if(h<0){h+=24;dy--;}
+  while(dy>daysInMonth(y,mo)){dy-=daysInMonth(y,mo);if(++mo>12){mo=1;y++;}}
+  while(dy<1){if(--mo<1){mo=12;y--;}dy+=daysInMonth(y,mo);}
+  if(mo>12){mo-=12;y++;} if(mo<1){mo+=12;y--;}
+  $('inp-year').value=Math.max(1900,Math.min(2100,y));
+  $('inp-month').value=mo; $('inp-day').value=dy;
+  $('inp-hour').value=h;   $('inp-minute').value=mi;
   doRender();
 }
 
-
 function getInputs(){
-  function safeInt(id, def){
-    var v = parseInt(document.getElementById(id).value);
-    return isNaN(v) ? def : v;
-  }
-  return {
-    year:     safeInt('inp-year',    2026),
-    month:    safeInt('inp-month',   4),
-    day:      safeInt('inp-day',     16),
-    hour:     safeInt('inp-hour',    0),
-    minute:   safeInt('inp-minute',  0),
-    mingYear: safeInt('inp-mingYear',2026)
-  };
+  const si=(id,def)=>{const v=parseInt($(id).value);return isNaN(v)?def:v;};
+  return{year:si('inp-year',2026),month:si('inp-month',4),day:si('inp-day',16),
+         hour:si('inp-hour',0),minute:si('inp-minute',0),mingYear:si('inp-mingYear',2026)};
 }
 
 function useNow(){
   const now=new Date(Date.now()+8*3600*1000);
   const y=now.getUTCFullYear();
-  document.getElementById('inp-year').value  =y;
-  document.getElementById('inp-month').value =now.getUTCMonth()+1;
-  document.getElementById('inp-day').value   =now.getUTCDate();
-  document.getElementById('inp-hour').value  =now.getUTCHours();
-  document.getElementById('inp-minute').value=now.getUTCMinutes();
-  document.getElementById('inp-mingYear').value=y;
+  $('inp-year').value=y; $('inp-month').value=now.getUTCMonth()+1;
+  $('inp-day').value=now.getUTCDate(); $('inp-hour').value=now.getUTCHours();
+  $('inp-minute').value=now.getUTCMinutes(); $('inp-mingYear').value=y;
   doRender();
 }
 
 function getMingGZ(mingYear){
   try{
-    const result=Paipan.GetGZ(mingYear,3,1,12,0,0);
-    const tg=TG_LIST[result[0][0]];
-    const dz=DZ_LIST[result[1][0]];
-    return {gz:tg+dz,tg:tg,dz:dz};
-  }catch(e){ return null; }
+    const r=Paipan.GetGZ(mingYear,3,1,12,0,0);
+    const tg=TG_LIST[r[0][0]], dz=DZ_LIST[r[1][0]];
+    return{gz:tg+dz,tg,dz};
+  }catch(e){return null;}
 }
 
-function renderMingzhu(pan, gz4){
-  const {mingYear} = getInputs();
-  const X = '<span class="mz-x">✗</span>';
+/* ── renderMingzhu（大幅精簡） ── */
+function renderMingzhu(pan,gz4){
+  const {mingYear}=getInputs();
+  const X='<span class="mz-x">✗</span>';
+  const dayDZ=extractDZ(gz4?gz4[2]:'');
+  const hourDZ=extractDZ(gz4?gz4[3]:'');
+  const ming=getMingGZ(mingYear);
+  const mingDZ=ming?ming.dz:null;
 
-  function extractDZfromGZ4(gz4str){
-    if(gz4str && gz4str.length >= 2){
-      const dz = gz4str.charAt(1);
-      if(DZ_LIST.includes(dz)) return dz;
-    }
-    return null;
-  }
-  const dayDZ  = extractDZfromGZ4(gz4 ? gz4[2] : '');
-  const hourDZ = extractDZfromGZ4(gz4 ? gz4[3] : '');
+  setEl('mz-gz', ming?ming.gz:'—', false);
 
-  const ming   = getMingGZ(mingYear);
-  const mingDZ = ming ? ming.dz : null;
-  const elGz = document.getElementById('mz-gz');
-  if(elGz) elGz.textContent = ming ? ming.gz : '—';
+  let matchedHourDZ=null;
 
-  if(mingDZ && Paipan.GetSanHe){
-    const sh = Paipan.GetSanHe(mingDZ);
+  if(mingDZ&&Paipan.GetSanHe){
+    const sh=Paipan.GetSanHe(mingDZ);
     if(sh){
-      const mingGua   = sh.input ? sh.input.gua : '';
-      const mingEntry = mingDZ + (mingGua ? '('+mingGua+')' : '');
-      const dirParts  = sh.result.map(function(r){ return r.name+'('+r.gua+')'; });
-      const elDir = document.getElementById('mz-sanhe-dir');
-      if(elDir) elDir.textContent = [mingEntry].concat(dirParts).join('、');
+      const allEntries=[sh.input].concat(sh.result);
+      const sanheDZs=allEntries.map(r=>r.name);
+      const sanheText=allEntries.map(r=>r.name+'('+r.gua+')').join('、');
 
-      const allEntries = [sh.input].concat(sh.result);
-      const condParts  = [];
-      const starMap = pan ? (pan.星||{}) : {};
-      const doorMap = pan ? (pan.門||{}) : {};
-      allEntries.forEach(function(r){
-        const gua    = r.gua;
-        const starJx = STAR_JX[starMap[gua]] || '';
-        const doorJx = DOOR_JX[doorMap[gua]] || '';
-        if(starJx !== '吉' || doorJx !== '吉') return;
-        let extra = '';
-        if(gua === '乾') extra = '<span style="color:var(--red);font-weight:bold;">(✗)</span>';
-        else if(gua === '震') extra = '<span style="color:#1565c0;">(卯✗)</span>';
-        else if(gua === '坤') extra = '<span style="color:#1565c0;">(申✗)</span>';
-        condParts.push('<span style="color:var(--teal);font-weight:bold;">'+gua+'</span>'+extra);
-      });
-      const elDirCond = document.getElementById('mz-sanhe-dir-cond');
-      if(elDirCond) elDirCond.innerHTML = condParts.length > 0 ? condParts.join('　') : '　';
-    } else {
-      const elDir     = document.getElementById('mz-sanhe-dir');
-      const elDirCond = document.getElementById('mz-sanhe-dir-cond');
-      if(elDir)     elDir.textContent     = '—';
-      if(elDirCond) elDirCond.textContent = '　';
-    }
-  } else {
-    const elDir     = document.getElementById('mz-sanhe-dir');
-    const elDirCond = document.getElementById('mz-sanhe-dir-cond');
-    if(elDir)     elDir.textContent     = '—';
-    if(elDirCond) elDirCond.textContent = '　';
-  }
-
-  let matchedHourDZ = null;
-  if(mingDZ && Paipan.GetSanHe){
-    const sh = Paipan.GetSanHe(mingDZ);
-    if(sh){
-      const allInfo   = [sh.input].concat(sh.result);
-      const sanheDZs  = allInfo.map(function(info){ return info.name; });
-      const sanheText = allInfo.map(function(info){ return info.name+'('+info.gua+')'; }).join('、');
-      const elFull     = document.getElementById('mz-sanhe-full');
-      const elFullHour = document.getElementById('mz-sanhe-full-hour');
-      if(elFull)     elFull.textContent     = sanheText;
-      if(elFullHour) elFullHour.textContent = sanheText;
-
-      const dayCondTd = document.getElementById('mz-sanhe-full-cond');
-      if(dayCondTd){
-        if(dayDZ && sanheDZs.includes(dayDZ)){
-          dayCondTd.textContent      = dayDZ;
-          dayCondTd.style.color      = 'var(--teal)';
-          dayCondTd.style.fontWeight = 'bold';
-        } else {
-          dayCondTd.textContent      = '　';
-          dayCondTd.style.color      = '';
-          dayCondTd.style.fontWeight = '';
+      /* 三合方 */
+      setEl('mz-sanhe-dir', sanheText, false);
+      const starMap=pan?(pan.星||{}):{}, doorMap=pan?(pan.門||{}):{};
+      const condParts=allEntries.reduce((acc,r)=>{
+        const g=r.gua;
+        if((STAR_JX[starMap[g]]==='吉')&&(DOOR_JX[doorMap[g]]==='吉')){
+          let ex='';
+          if(g==='乾') ex='<span style="color:var(--red);font-weight:bold">(✗)</span>';
+          else if(g==='震') ex='<span style="color:#1565c0">(卯✗)</span>';
+          else if(g==='坤') ex='<span style="color:#1565c0">(申✗)</span>';
+          acc.push(`<span style="color:var(--teal);font-weight:bold">${g}</span>${ex}`);
         }
+        return acc;
+      },[]);
+      setEl('mz-sanhe-dir-cond', condParts.length?condParts.join('　'):'　');
+
+      /* 三合日 / 三合時 */
+      setEl('mz-sanhe-full',      sanheText, false);
+      setEl('mz-sanhe-full-hour', sanheText, false);
+
+      const dayTd=$('mz-sanhe-full-cond');
+      if(dayTd){
+        if(dayDZ&&sanheDZs.includes(dayDZ)){
+          dayTd.textContent=dayDZ; dayTd.style.color='var(--teal)'; dayTd.style.fontWeight='bold';
+        } else { dayTd.textContent='　'; dayTd.style.color=''; dayTd.style.fontWeight=''; }
       }
 
-      const hourCondTd = document.getElementById('mz-sanhe-hour-cond');
-      if(hourCondTd){
-        if(hourDZ && sanheDZs.includes(hourDZ)){
-          matchedHourDZ = hourDZ;
-          const qlMap  = (pan && pan.青龍黃黑道) ? pan.青龍黃黑道 : {};
-          const qlInfo = qlMap[hourDZ] || {};
-          const dao    = qlInfo.道 || '';
-          let daoHtml  = '';
-          if(dao === '黃道') daoHtml = '<span style="color:var(--gold);font-size:.9em;">（黃道）</span>';
-          else if(dao === '黑道') daoHtml = '<span style="color:var(--dim);font-size:.9em;">（黑道）</span>';
-          hourCondTd.innerHTML        = '<span style="color:var(--teal);font-weight:bold;">'+hourDZ+'</span>'+daoHtml;
-          hourCondTd.style.color      = '';
-          hourCondTd.style.fontWeight = '';
-        } else {
-          hourCondTd.textContent      = '　';
-          hourCondTd.style.color      = '';
-          hourCondTd.style.fontWeight = '';
-        }
+      const hourTd=$('mz-sanhe-hour-cond');
+      if(hourTd){
+        if(hourDZ&&sanheDZs.includes(hourDZ)){
+          matchedHourDZ=hourDZ;
+          const qlInfo=(pan&&pan.青龍黃黑道?pan.青龍黃黑道:{})[hourDZ]||{};
+          const dao=qlInfo.道||'';
+          const daoHtml=dao==='黃道'?`<span style="color:var(--gold);font-size:.9em">（黃道）</span>`
+                        :dao==='黑道'?`<span style="color:var(--dim);font-size:.9em">（黑道）</span>`:'';
+          hourTd.innerHTML=`<span style="color:var(--teal);font-weight:bold">${hourDZ}</span>${daoHtml}`;
+        } else { hourTd.textContent='　'; hourTd.style.color=''; hourTd.style.fontWeight=''; }
       }
     } else {
-      ['mz-sanhe-full','mz-sanhe-full-hour'].forEach(function(id){
-        const el=document.getElementById(id); if(el) el.textContent='—';
-      });
-      ['mz-sanhe-full-cond','mz-sanhe-hour-cond'].forEach(function(id){
-        const el=document.getElementById(id); if(el) el.textContent='　';
-      });
+      ['mz-sanhe-dir','mz-sanhe-full','mz-sanhe-full-hour'].forEach(id=>setEl(id,'—',false));
+      ['mz-sanhe-dir-cond','mz-sanhe-full-cond','mz-sanhe-hour-cond'].forEach(id=>setEl(id,'　',false));
     }
   } else {
-    ['mz-sanhe-full','mz-sanhe-full-hour'].forEach(function(id){
-      const el=document.getElementById(id); if(el) el.textContent='—';
-    });
-    ['mz-sanhe-full-cond','mz-sanhe-hour-cond'].forEach(function(id){
-      const el=document.getElementById(id); if(el) el.textContent='　';
-    });
+    ['mz-sanhe-dir','mz-sanhe-full','mz-sanhe-full-hour'].forEach(id=>setEl(id,'—',false));
+    ['mz-sanhe-dir-cond','mz-sanhe-full-cond','mz-sanhe-hour-cond'].forEach(id=>setEl(id,'　',false));
   }
 
-  (function(){
-    const td = document.getElementById('mz-tianyi');
-    if(!td) return;
-    if(!matchedHourDZ){ td.textContent = '　'; return; }
-    const ty     = pan ? (pan.天乙貴人||{}) : {};
-    const yangDZ = ty.陽貴 ? ty.陽貴.地支 : null;
-    const yinDZ  = ty.陰貴 ? ty.陰貴.地支 : null;
-    if(matchedHourDZ === yangDZ || matchedHourDZ === yinDZ)
-      td.innerHTML = '<span style="color:var(--teal);font-size:1.1em;">✔</span>';
-    else
-      td.textContent = '　';
-  })();
+  /* 天乙貴人 */
+  if(matchedHourDZ){
+    const ty=pan?(pan.天乙貴人||{}):{};
+    const isGR=matchedHourDZ===(ty.陽貴?.地支)||matchedHourDZ===(ty.陰貴?.地支);
+    setEl('mz-tianyi', isGR?'<span style="color:var(--teal);font-size:1.1em">✔</span>':'　');
+  } else setEl('mz-tianyi','　',false);
 
-  (function(){
-    const jlObj   = pan ? (pan.截路空亡||{}) : {};
-    const jieList = Array.isArray(jlObj.截路) ? jlObj.截路 : [];
-    const konList = Array.isArray(jlObj.空亡)  ? jlObj.空亡  : [];
-    const allList = jieList.concat(konList);
-    const td = document.getElementById('mz-jielukong');
-    if(!td) return;
-    if(hourDZ && allList.includes(hourDZ)) td.innerHTML = X;
-    else { td.style.color=''; td.textContent='　'; }
-  })();
+  /* 截路空亡 */
+  const jlObj=pan?(pan.截路空亡||{}):{};
+  const allJK=[...(Array.isArray(jlObj.截路)?jlObj.截路:[]),...(Array.isArray(jlObj.空亡)?jlObj.空亡:[])];
+  setEl('mz-jielukong', hourDZ&&allJK.includes(hourDZ)?X:'　');
 
-  const wby = pan ? pan.五不遇時 : false;
-  const elWby = document.getElementById('mz-wby');
-  if(elWby) elWby.innerHTML = wby ? X : '　';
+  /* 五不遇時 */
+  setEl('mz-wby', pan&&pan.五不遇時?X:'　');
 
-  (function(){
-    const td = document.getElementById('mz-xishen');
-    if(!td) return;
-    const xiShen   = pan ? (pan.喜神 || '') : '';
-    const condEl   = document.getElementById('mz-sanhe-dir-cond');
-    const condText = condEl ? condEl.textContent.trim() : '';
-    const guaList  = ['坎','坤','震','巽','乾','兌','艮','離'];
-    const foundGuas= guaList.filter(function(g){ return condText.includes(g); });
-    if(xiShen && foundGuas.includes(xiShen))
-      td.innerHTML = '<span style="color:var(--teal);font-size:1.1em;">✔</span>';
-    else
-      td.textContent = '　';
-  })();
+  /* 喜神 */
+  const xiShen=pan?(pan.喜神||''):'';
+  const condText=($('mz-sanhe-dir-cond')||{}).textContent||'';
+  const foundGuas=['坎','坤','震','巽','乾','兌','艮','離'].filter(g=>condText.includes(g));
+  setEl('mz-xishen', xiShen&&foundGuas.includes(xiShen)?'<span style="color:var(--teal);font-size:1.1em">✔</span>':'　');
 
-  if(mingDZ && Paipan.CheckChong){
-    const chong     = Paipan.CheckChong(mingDZ);
-    const chongName = chong ? chong.chong.name : null;
-    const elCD = document.getElementById('mz-chong-day');
-    const elCH = document.getElementById('mz-chong-hour');
-    if(elCD) elCD.innerHTML = (chongName && dayDZ  === chongName) ? X : '　';
-    if(elCH) elCH.innerHTML = (chongName && hourDZ === chongName) ? X : '　';
-  } else {
-    const elCD = document.getElementById('mz-chong-day');
-    const elCH = document.getElementById('mz-chong-hour');
-    if(elCD) elCD.innerHTML = '　';
-    if(elCH) elCH.innerHTML = '　';
+  /* 沖 / 害 / 刑 */
+  function setBadPair(checkFn, propName, dayId, hourId){
+    if(!mingDZ||!checkFn){setEl(dayId,'　',false);setEl(hourId,'　',false);return;}
+    const res=checkFn(mingDZ), name=res?res[propName]?.name:null;
+    setEl(dayId,  name&&dayDZ===name  ?X:'　');
+    setEl(hourId, name&&hourDZ===name ?X:'　');
   }
+  setBadPair(Paipan.CheckChong,'chong','mz-chong-day','mz-chong-hour');
+  setBadPair(Paipan.CheckHai,  'hai',  'mz-hai-day',  'mz-hai-hour');
 
-  if(mingDZ && Paipan.CheckHai){
-    const hai     = Paipan.CheckHai(mingDZ);
-    const haiName = hai ? hai.hai.name : null;
-    const elHD = document.getElementById('mz-hai-day');
-    const elHH = document.getElementById('mz-hai-hour');
-    if(elHD) elHD.innerHTML = (haiName && dayDZ  === haiName) ? X : '　';
-    if(elHH) elHH.innerHTML = (haiName && hourDZ === haiName) ? X : '　';
-  } else {
-    const elHD = document.getElementById('mz-hai-day');
-    const elHH = document.getElementById('mz-hai-hour');
-    if(elHD) elHD.innerHTML = '　';
-    if(elHH) elHH.innerHTML = '　';
-  }
-
-  if(mingDZ && Paipan.CheckXing){
-    const xingDay  = Paipan.CheckXing(mingDZ, dayDZ  || '');
-    const xingHour = Paipan.CheckXing(mingDZ, hourDZ || '');
-    const elXD = document.getElementById('mz-xing-day');
-    const elXH = document.getElementById('mz-xing-hour');
-    if(elXD) elXD.innerHTML = (xingDay  && xingDay.isXing)  ? X : '　';
-    if(elXH) elXH.innerHTML = (xingHour && xingHour.isXing) ? X : '　';
-  } else {
-    const elXD = document.getElementById('mz-xing-day');
-    const elXH = document.getElementById('mz-xing-hour');
-    if(elXD) elXD.innerHTML = '　';
-    if(elXH) elXH.innerHTML = '─';
-  }
+  if(mingDZ&&Paipan.CheckXing){
+    setEl('mz-xing-day',  Paipan.CheckXing(mingDZ,dayDZ||'')?.isXing  ?X:'　');
+    setEl('mz-xing-hour', Paipan.CheckXing(mingDZ,hourDZ||'')?.isXing ?X:'　');
+  } else { setEl('mz-xing-day','　',false); setEl('mz-xing-hour','─',false); }
 }
 
+/* ── doRender ── */
 function doRender(){
   const {year,month,day,hour,minute}=getInputs();
   if(typeof Paipan==='undefined'||typeof Paipan.dayPan!=='function'){
-    alert('JS 模組尚未載入，請確認五個 JS 檔案已正確引入。'); return;
+    alert('JS 模組尚未載入'); return;
   }
-  let gz4;
-  try{ gz4=Paipan.getGangzhi(year,month,day,hour,minute); }
-  catch(e){ console.error('getGangzhi error',e); gz4=['','','','']; }
-
-  let pan;
-  try{ pan=Paipan.dayPan(year,month,day,hour,minute); }
-  catch(e){ alert('起盤錯誤：'+e.message); console.error(e); return; }
-
-  let lunarObj=null;
-  try{ lunarObj=Paipan.getLunarDate(year,month,day); }
-  catch(e){}
+  let gz4; try{gz4=Paipan.getGangzhi(year,month,day,hour,minute);}catch(e){gz4=['','','',''];}
+  let pan;  try{pan=Paipan.dayPan(year,month,day,hour,minute);}catch(e){alert('起盤錯誤：'+e.message);return;}
+  let lunarObj=null; try{lunarObj=Paipan.getLunarDate(year,month,day);}catch(e){}
 
   renderInfoBar(pan,gz4,lunarObj,year,month,day,hour,minute);
   renderSizhu(gz4);
   renderKong(gz4);
   renderWuxing(gz4);
   renderPalace(pan);
-  renderRight(pan,hour);   // ★ 先建立右側 DOM（含年命表格骨架）
-  renderMingzhu(pan,gz4);  // ★ 再填入年命資料
+  renderRight(pan,hour);
+  renderMingzhu(pan,gz4);
 }
 
 function renderInfoBar(pan,gz4,lunarObj,y,m,d,h,mi){
   let lunarStr='—';
-  if(lunarObj && lunarObj.農曆月 !== undefined){
+  if(lunarObj&&lunarObj.農曆月!==undefined){
     const dayNum=parseInt(lunarObj.日)||0;
-    const dayCN=DAY_CN[dayNum]||String(dayNum);
-    lunarStr=lunarObj.農曆月+dayCN;
+    lunarStr=lunarObj.農曆月+(DAY_CN[dayNum]||String(dayNum));
   }
-  document.getElementById('i-lunar').textContent=lunarStr;
+  setEl('i-lunar',lunarStr,false);
 
   let jqStr='—';
   try{
-    const cur =Paipan.getCurrentJieqi(y,m,d,h,mi);
-    const next=Paipan.getNextJieqi(y,m,d,h,mi);
-    const fmt = o =>
-      `${o.名稱}<span style="color:var(--dim);font-size:.85em;">（${o.月}/${o.日} ${String(o.時).padStart(2,'0')}:${String(o.分||0).padStart(2,'0')}）</span>`;
-    if(cur&&next)
-      jqStr = `<div>${fmt(cur)}</div><div style="margin-top:3px;">${fmt(next)}</div>`;
-    else if(cur)
-      jqStr = `<div>${fmt(cur)}</div>`;
+    const cur=Paipan.getCurrentJieqi(y,m,d,h,mi);
+    const nxt=Paipan.getNextJieqi(y,m,d,h,mi);
+    const fmt=o=>`${o.名稱}<span style="color:var(--dim);font-size:.85em">（${o.月}/${o.日} ${String(o.時).padStart(2,'0')}:${String(o.分||0).padStart(2,'0')}）</span>`;
+    if(cur&&nxt) jqStr=`<div>${fmt(cur)}</div><div style="margin-top:3px">${fmt(nxt)}</div>`;
+    else if(cur)  jqStr=`<div>${fmt(cur)}</div>`;
   }catch(e){}
-  document.getElementById('i-jq').innerHTML = jqStr;
+  setEl('i-jq',jqStr);
 
   const ju=pan.排局||{};
-  document.getElementById('i-ju').innerHTML=
-    `<span style="color:var(--blue)">${ju.陰陽遁||''}</span> `+
-    `<span style="color:var(--gold2);font-size:1.2rem;">${ju.局數||''}局</span> `+
-    `<span style="color:var(--text2);font-size:1.2rem;">${ju.元||''}</span>`;
-  document.getElementById('i-xun').textContent=pan.旬首||'—';
+  setEl('i-ju',`<span style="color:var(--blue)">${ju.陰陽遁||''}</span> <span style="color:var(--gold2);font-size:1.2rem">${ju.局數||''}局</span> <span style="color:var(--text2);font-size:1.2rem">${ju.元||''}</span>`);
+  setEl('i-xun',pan.旬首||'—',false);
 }
 
 function renderSizhu(gz4){
-  const defs=[
-    {tgId:'sz-y-tg',dzId:'sz-y-dz',gz:gz4[0]},
-    {tgId:'sz-m-tg',dzId:'sz-m-dz',gz:gz4[1]},
-    {tgId:'sz-d-tg',dzId:'sz-d-dz',gz:gz4[2]},
-    {tgId:'sz-h-tg',dzId:'sz-h-dz',gz:gz4[3]},
-  ];
-  defs.forEach(def=>{
-    const gzStr=def.gz||'';
-    const tg=gzStr.length>=2?gzStr[0]:'';
-    const dz=gzStr.length>=2?gzStr[1]:'';
-    const tgEl=document.getElementById(def.tgId);
-    const dzEl=document.getElementById(def.dzId);
-    if(tgEl) tgEl.innerHTML=`<span class="${tgCls(tg)}">${tg||'—'}</span>`;
-    if(dzEl) dzEl.innerHTML=`<span class="${dzCls(dz)}">${dz||''}</span>`;
+  [['sz-y-tg','sz-y-dz',gz4[0]],['sz-m-tg','sz-m-dz',gz4[1]],
+   ['sz-d-tg','sz-d-dz',gz4[2]],['sz-h-tg','sz-h-dz',gz4[3]]].forEach(([tid,did,gz])=>{
+    const tg=gz?.[0]||'', dz=gz?.[1]||'';
+    setEl(tid,`<span class="${tgCls(tg)}">${tg||'—'}</span>`);
+    setEl(did,`<span class="${dzCls(dz)}">${dz}</span>`);
   });
 }
 
 function renderKong(gz4){
-  const dayGZ=gz4[2]||'';
-  const dayXH=getXunHead(dayGZ);
-  const dayKong=dayXH?KONG_MAP[dayXH]||'—':'—';
-  document.getElementById('k-day').textContent=
-    dayKong.length===2?dayKong[0]+'、'+dayKong[1]:dayKong;
-
-  const hourGZ=gz4[3]||'';
-  const hourXH=getXunHead(hourGZ);
-  const hourKong=hourXH?KONG_MAP[hourXH]||'—':'—';
-  document.getElementById('k-hour').textContent=
-    hourKong.length===2?hourKong[0]+'、'+hourKong[1]:hourKong;
+  const fmt=gz=>{const xh=getXunHead(gz),k=xh?KONG_MAP[xh]||'—':'—';return k.length===2?k[0]+'、'+k[1]:k;};
+  setEl('k-day',  fmt(gz4[2]||''), false);
+  setEl('k-hour', fmt(gz4[3]||''), false);
 }
 
 function renderWuxing(gz4){
-  const mGZ=gz4[1]||'';
-  const mDZ=mGZ.length>=2?mGZ[1]:'';
+  const mDZ=(gz4[1]||'')[1]||'';
   const states=calcWxStates(mDZ);
-
-  // 依旺相休囚死順序，找出對應五行並排列
-  const stateOrder=['旺','相','休','囚','死'];
-  const wxRow=document.querySelector('.wuxing-row');
-  if(!wxRow) return;
-  wxRow.innerHTML='';
-
-  stateOrder.forEach(function(st){
-    // 找出哪個五行對應此狀態
-    const wx=Object.keys(states).find(function(k){ return states[k]===st; })||'';
-    const wxColorMap={木:'wx-mu',火:'wx-huo',土:'wx-tu',金:'wx-jin',水:'wx-shui'};
-    const colorCls=wxColorMap[wx]||'';
-    wxRow.innerHTML+=`<div class="wx-chip">
-      <div class="wx-nm ${colorCls}">${wx||'—'}</div>
-      <div class="wx-st"><span class="${STATE_CLS[st]||''}">${st}</span></div>
-    </div>`;
-  });
+  const wxRow=$('wuxing-row');
+  if(!wxRow)return;
+  wxRow.innerHTML=['旺','相','休','囚','死'].map(st=>{
+    const wx=Object.keys(states).find(k=>states[k]===st)||'';
+    return `<div class="wx-chip"><div class="wx-nm ${WX_CLS[wx]||''}">${wx||'—'}</div><div class="wx-st"><span class="${STATE_CLS[st]||''}">${st}</span></div></div>`;
+  }).join('');
 }
-
 
 function renderPalace(pan){
-  const earth =pan.地盤||{};
-  const heaven=pan.天盤||{};
-  const star  =pan.星||{};
-  const door  =pan.門||{};
-  const god   =pan.神||{};
+  const earth=pan.地盤||{},heaven=pan.天盤||{},star=pan.星||{},door=pan.門||{},god=pan.神||{};
   const zfGong=(pan.值符值使&&pan.值符值使.值符宮)||'';
-
-  const HIDDEN_GODS = new Set(['九天','九地','玄武','白虎','螣蛇','勾陳','朱雀','六合','太陰','值符']);
-  const SHOW_EARTH  = false;
-  const SHOW_HEAVEN = false;
-
-  const grid=document.getElementById('palace-grid');
+  const grid=$('palace-grid');
   grid.innerHTML='';
-
   GRID_POS.forEach(gua=>{
+    const isCtr=gua==='中', isZF=gua===zfGong&&!isCtr;
     const cell=document.createElement('div');
-    const isCtr=(gua==='中');
-    const isZF =(gua===zfGong&&!isCtr);
-const guaBg = {
-  坎:'linear-gradient(-225deg, #5D9FFF 0%, #B8DCFF 48%, #6BBBFF 100%)',
-  兌:'linear-gradient(135deg, #ff9a44 0%, #ffe0b2 50%, #e65c00 100%)',
-  乾:'linear-gradient(135deg, #ff9a44 0%, #ffe0b2 50%, #e65c00 100%)',
-  震:'linear-gradient(135deg, #39F3BB 0%, #DFFFCD 50%, #2dd4a0 100%)',
-  巽:'linear-gradient(135deg, #39F3BB 0%, #DFFFCD 50%, #2dd4a0 100%)',
-  離:'linear-gradient(135deg, #e87878 0%, #f7a8a8 50%, #d04545 100%)',
-  艮:'linear-gradient(135deg, #c9954a 0%, #eacda3 50%, #c9954a 100%)',
-  坤:'linear-gradient(135deg, #c9954a 0%, #eacda3 50%, #c9954a 100%)',
-};
-
-
-
     cell.className='p-cell'+(isCtr?' c-ctr':'')+(isZF?' c-zf':'');
-if(!isCtr && guaBg[gua]){
-  cell.style.background = '';
-  cell.style.backgroundImage = guaBg[gua];
-}
-
-    const num  =GUA_NUM[gua]||'';
-    const eTG  =earth[gua]||'';
-    const hTG  =heaven[gua]||'';
-    const sName=star[gua]||'';
-    const dName=door[gua]||'';
-    const gName=god[gua]||'';
-
-    let h=`<div class="p-gua">${gua}</div><div class="p-num">${num}</div><div class="p-body">`;
-    if(isCtr){
-      if(sName) h+=`<span class="ctag ${jxCls(STAR_JX[sName]||'平')}">${sName}</span>`;
-      if(SHOW_EARTH && eTG) h+=`<div class="p-earth ${tgCls(eTG)}" style="margin-top:6px;">地：${eTG}</div>`;
-      if(SHOW_HEAVEN && hTG) h+=`<div class="p-heaven">天：${hTG}</div>`;
-    } else {
-      if(sName) h+=`<span class="ctag ${jxCls(STAR_JX[sName]||'平')}">${sName}</span>`;
+    if(!isCtr&&GUA_BG[gua]) cell.style.backgroundImage=GUA_BG[gua];
+    const sName=star[gua]||'', dName=door[gua]||'', gName=god[gua]||'';
+    let h=`<div class="p-gua">${gua}</div><div class="p-num">${GUA_NUM[gua]||''}</div><div class="p-body">`;
+    if(sName) h+=`<span class="ctag ${jxCls(STAR_JX[sName]||'平')}">${sName}</span>`;
+    if(!isCtr){
       if(dName) h+=`<span class="ctag ${jxCls(DOOR_JX[dName]||'平')}">${dName}門</span>`;
-      if(gName && !HIDDEN_GODS.has(gName)){
-        const isVF=(gName==='值符');
-        h+=`<span class="ctag ${isVF?'tzf':'tg'}">${gName}</span>`;
-      }
-      if(SHOW_EARTH && eTG)  h+=`<div class="p-earth ${tgCls(eTG)}">地：${eTG}</div>`;
-      if(SHOW_HEAVEN && hTG) h+=`<div class="p-heaven">天：${hTG}</div>`;
-      if(isZF) h+=`<span class="ctag tzf" style="margin-top:2px;">▲值符</span>`;
+      if(gName&&!HIDDEN_GODS.has(gName)) h+=`<span class="ctag tg">${gName}</span>`;
+      if(isZF) h+=`<span class="ctag tzf" style="margin-top:2px">▲值符</span>`;
     }
     h+='</div>';
     cell.innerHTML=h;
@@ -928,171 +503,78 @@ if(!isCtr && guaBg[gua]){
   });
 }
 
-function renderRight(pan, hour){
-  const rp = document.getElementById('right-panel');
-  rp.innerHTML = '';
+function renderRight(pan,hour){
+  const rp=$('right-panel');
 
-  // [1] 年命條件表格（right-panel 最頂部）
-  rp.innerHTML += `
-<div class="r-card no-pad">
-  <table class="mingzhu-table">
-    <thead>
-      <tr>
-        <th class="mz-hdr" style="width:36%">年命</th>
-        <th class="mz-hdr" style="width:32%">結果</th>
-        <th class="mz-hdr" style="width:32%">條件滿足</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td class="mz-row-hdr">年命干支</td>
-        <td class="mz-val" colspan="2" id="mz-gz">—</td>
-      </tr>
-      <tr>
-        <td class="mz-row-hdr">三合方</td>
-        <td colspan="2" style="padding:0;border:none;">
-          <table style="width:100%;border-collapse:collapse;table-layout:fixed;">
-            <tr>
-              <td class="mz-val" id="mz-sanhe-dir" style="width:50%;border:1px solid var(--border);">—</td>
-              <td class="mz-val" id="mz-sanhe-dir-cond" style="width:50%;border:1px solid var(--border);">　</td>
-            </tr>
-          </table>
-        </td>
-      </tr>
-      <tr>
-        <td class="mz-row-hdr">三合日</td>
-        <td colspan="2" style="padding:0;border:none;">
-          <table style="width:100%;border-collapse:collapse;table-layout:fixed;">
-            <tr>
-              <td class="mz-val" id="mz-sanhe-full" style="width:50%;border:1px solid var(--border);">—</td>
-              <td class="mz-val" id="mz-sanhe-full-cond" style="width:50%;border:1px solid var(--border);">　</td>
-            </tr>
-          </table>
-        </td>
-      </tr>
-      <tr>
-        <td class="mz-row-hdr">三合時</td>
-        <td colspan="2" style="padding:0;border:none;">
-          <table style="width:100%;border-collapse:collapse;table-layout:fixed;">
-            <tr>
-              <td class="mz-val" id="mz-sanhe-full-hour" style="width:50%;border:1px solid var(--border);">—</td>
-              <td class="mz-val" id="mz-sanhe-hour-cond" style="width:50%;border:1px solid var(--border);">　</td>
-            </tr>
-          </table>
-        </td>
-      </tr>
-      <tr>
-        <td class="mz-row-hdr">天乙貴人(時柱)</td>
-        <td class="mz-val" colspan="2" id="mz-tianyi">　</td>
-      </tr>
-      <tr>
-        <td class="mz-row-hdr">截路空亡(時柱)</td>
-        <td class="mz-val" colspan="2" id="mz-jielukong">　</td>
-      </tr>
-      <tr>
-        <td class="mz-row-hdr">五不遇時</td>
-        <td class="mz-val" colspan="2" id="mz-wby">　</td>
-      </tr>
-      <tr>
-        <td class="mz-row-hdr">喜神(三合方)</td>
-        <td class="mz-val" colspan="2" id="mz-xishen">　</td>
-      </tr>
-      <tr>
-        <td class="mz-row-hdr" style="color:#ffffff;text-align:center;">地支兇相</td>
-        <td class="mz-hdr" style="border:1px solid var(--border);">日</td>
-        <td class="mz-hdr" style="border:1px solid var(--border);">時</td>
-      </tr>
-      <tr>
-        <td class="mz-row-hdr">沖</td>
-        <td class="mz-val" id="mz-chong-day" style="border:1px solid var(--border);">　</td>
-        <td class="mz-val" id="mz-chong-hour" style="border:1px solid var(--border);">　</td>
-      </tr>
-      <tr>
-        <td class="mz-row-hdr">害</td>
-        <td class="mz-val" id="mz-hai-day" style="border:1px solid var(--border);">　</td>
-        <td class="mz-val" id="mz-hai-hour" style="border:1px solid var(--border);">　</td>
-      </tr>
-      <tr>
-        <td class="mz-row-hdr">刑</td>
-        <td class="mz-val" id="mz-xing-day" style="border:1px solid var(--border);">　</td>
-        <td class="mz-val" id="mz-xing-hour" style="border:1px solid var(--border);">─</td>
-      </tr>
-    </tbody>
-  </table>
+  /* 年命表格 */
+  const mzRows=[
+    ['年命干支',`<td class="mz-val" colspan="2" id="mz-gz">—</td>`],
+    ['三合方',  `<td colspan="2" style="padding:0;border:none"><table style="width:100%;border-collapse:collapse;table-layout:fixed"><tr><td class="mz-val" id="mz-sanhe-dir" style="width:50%;border:1px solid var(--border)">—</td><td class="mz-val" id="mz-sanhe-dir-cond" style="width:50%;border:1px solid var(--border)">　</td></tr></table></td>`],
+    ['三合日',  `<td colspan="2" style="padding:0;border:none"><table style="width:100%;border-collapse:collapse;table-layout:fixed"><tr><td class="mz-val" id="mz-sanhe-full" style="width:50%;border:1px solid var(--border)">—</td><td class="mz-val" id="mz-sanhe-full-cond" style="width:50%;border:1px solid var(--border)">　</td></tr></table></td>`],
+    ['三合時',  `<td colspan="2" style="padding:0;border:none"><table style="width:100%;border-collapse:collapse;table-layout:fixed"><tr><td class="mz-val" id="mz-sanhe-full-hour" style="width:50%;border:1px solid var(--border)">—</td><td class="mz-val" id="mz-sanhe-hour-cond" style="width:50%;border:1px solid var(--border)">　</td></tr></table></td>`],
+    ['天乙貴人(時柱)',`<td class="mz-val" colspan="2" id="mz-tianyi">　</td>`],
+    ['截路空亡(時柱)',`<td class="mz-val" colspan="2" id="mz-jielukong">　</td>`],
+    ['五不遇時',`<td class="mz-val" colspan="2" id="mz-wby">　</td>`],
+    ['喜神(三合方)',`<td class="mz-val" colspan="2" id="mz-xishen">　</td>`],
+  ];
+  const badRows=[
+    ['沖','mz-chong-day','mz-chong-hour'],
+    ['害','mz-hai-day',  'mz-hai-hour'],
+    ['刑','mz-xing-day', 'mz-xing-hour'],
+  ];
+
+  rp.innerHTML=`<div class="r-card no-pad"><table class="mingzhu-table">
+<thead><tr><th class="mz-hdr" style="width:36%">年命</th><th class="mz-hdr" style="width:32%">結果</th><th class="mz-hdr" style="width:32%">條件滿足</th></tr></thead>
+<tbody>
+${mzRows.map(([lbl,td])=>`<tr><td class="mz-row-hdr">${lbl}</td>${td}</tr>`).join('')}
+<tr><td class="mz-row-hdr" style="color:#fff;text-align:center">地支兇相</td><td class="mz-hdr" style="border:1px solid var(--border)">日</td><td class="mz-hdr" style="border:1px solid var(--border)">時</td></tr>
+${badRows.map(([lbl,did,hid])=>`<tr><td class="mz-row-hdr">${lbl}</td><td class="mz-val" id="${did}" style="border:1px solid var(--border)">　</td><td class="mz-val" id="${hid}" style="border:1px solid var(--border)">　</td></tr>`).join('')}
+</tbody></table></div>`;
+
+  /* 黃黑道 */
+  const curDZ=DZ_LIST[hourToDZIndex(hour??getInputs().hour)];
+  const ql=pan.青龍黃黑道||{};
+  rp.innerHTML+=`<div class="r-card"><div class="r-title">⊙ 十二時辰黃黑道</div>
+<table class="hdt"><tr><th>時段</th><th>支</th><th>神</th><th>道</th></tr>
+${DZ_LIST.map(dz=>{
+  const info=ql[dz]||{}, isH=info.道==='黃道', isCur=dz===curDZ;
+  return `<tr${isCur?' class="cur-hour"':''}><td style="color:var(--text2);font-size:.78rem">${getDZTime(dz)}</td><td style="color:var(--text2)">${dz}</td><td class="${isH?'huang':'hei'}">${info.神||'—'}</td><td class="${isH?'huang':'hei'}">${info.道||'—'}</td></tr>`;
+}).join('')}
+</table></div>`;
+
+  /* 天乙貴人 */
+  const ty=pan.天乙貴人||{};
+  rp.innerHTML+=`<div class="r-card"><div class="r-title">★ 天乙貴人</div>
+${ty.陽貴?`<div class="mrow"><span class="ml">陽貴</span><span class="mv good">${ty.陽貴.地支}時</span></div>`:''}
+${ty.陰貴?`<div class="mrow"><span class="ml">陰貴</span><span class="mv good">${ty.陰貴.地支}時</span></div>`:''}
+${!ty.陽貴&&!ty.陰貴?'<div class="mrow"><span class="ml" style="color:var(--dim)">查無資料</span></div>':''}
 </div>`;
 
-  // [2] 十二時辰黃黑道
-  const curDZIndex = hourToDZIndex(hour !== undefined ? hour : getInputs().hour);
-  const curDZ      = DZ_LIST[curDZIndex];
-  const ql = pan.青龍黃黑道 || {};
-  let s = `<div class="r-card"><div class="r-title">⊙ 十二時辰黃黑道</div>
-<table class="hdt"><tr><th>時段</th><th>支</th><th>神</th><th>道</th></tr>`;
-  DZ_LIST.forEach(dz => {
-    const info = ql[dz] || {};
-    const isH  = (info.道 === '黃道');
-    const isCur= (dz === curDZ);
-    s += `<tr${isCur ? ' class="cur-hour"' : ''}>
-      <td style="color:var(--text2);font-size:.78rem;">${DZ_TIME[dz]}</td>
-      <td style="color:var(--text2)">${dz}</td>
-      <td class="${isH ? 'huang' : 'hei'}">${info.神 || '—'}</td>
-      <td class="${isH ? 'huang' : 'hei'}">${info.道 || '—'}</td>
-    </tr>`;
-  });
-  s += `</table></div>`;
-  rp.innerHTML += s;
-
-  // [3] 天乙貴人
-  const ty = pan.天乙貴人 || {};
-  let ts = `<div class="r-card"><div class="r-title">★ 天乙貴人</div>`;
-  if(ty.陽貴) ts += `<div class="mrow"><span class="ml">陽貴</span><span class="mv good">${ty.陽貴.地支}時</span></div>`;
-  if(ty.陰貴) ts += `<div class="mrow"><span class="ml">陰貴</span><span class="mv good">${ty.陰貴.地支}時</span></div>`;
-  if(!ty.陽貴 && !ty.陰貴) ts += `<div class="mrow"><span class="ml" style="color:var(--dim)">查無資料</span></div>`;
-  ts += `</div>`;
-  rp.innerHTML += ts;
-
-  // [4] 擇日輔助資訊
-  const xi      = pan.喜神 || '—';
-  const wby     = pan.五不遇時;
-  const jlObj   = pan.截路空亡 || {};
-  const jieList = Array.isArray(jlObj.截路) ? jlObj.截路 : [];
-  const konList = Array.isArray(jlObj.空亡)  ? jlObj.空亡  : [];
-  const jieStr  = jieList.length > 0 ? jieList.join('時、') + '時' : '—';
-  const konStr  = konList.length > 0 ? konList.join('時、') + '時' : '—';
-  rp.innerHTML += `<div class="r-card">
-    <div class="r-title">✦ 擇日輔助資訊</div>
-    <div class="mrow"><span class="ml">喜神方位</span><span class="mv good">${xi}方</span></div>
-    <div class="mrow"><span class="ml">截路</span><span class="mv warn">${jieStr}</span></div>
-    <div class="mrow"><span class="ml">空亡</span><span class="mv warn">${konStr}</span></div>
-    <div class="mrow"><span class="ml">五不遇時</span><span class="mv ${wby ? 'bad' : 'good'}">${wby ? '⚠ 是' : '否'}</span></div>
-  </div>`;
+  /* 擇日輔助 */
+  const xi=pan.喜神||'—', wby=pan.五不遇時;
+  const jlObj=pan.截路空亡||{};
+  const jieList=Array.isArray(jlObj.截路)?jlObj.截路:[];
+  const konList=Array.isArray(jlObj.空亡)?jlObj.空亡:[];
+  const jieStr=jieList.length?jieList.join('時、')+'時':'—';
+  const konStr=konList.length?konList.join('時、')+'時':'—';
+  rp.innerHTML+=`<div class="r-card"><div class="r-title">✦ 擇日輔助資訊</div>
+<div class="mrow"><span class="ml">喜神方位</span><span class="mv good">${xi}方</span></div>
+<div class="mrow"><span class="ml">截路</span><span class="mv warn">${jieStr}</span></div>
+<div class="mrow"><span class="ml">空亡</span><span class="mv warn">${konStr}</span></div>
+<div class="mrow"><span class="ml">五不遇時</span><span class="mv ${wby?'bad':'good'}">${wby?'⚠ 是':'否'}</span></div>
+</div>`;
 }
 
-
-
-// ── Enter 鍵觸發起盤 ──────────────────────────────────
-// 新的
+/* ── Enter 鍵 ── */
 (function(){
-  const watchIds = ['inp-year','inp-month','inp-day','inp-hour','inp-minute','inp-mingYear'];
-  watchIds.forEach(function(id){
-    document.getElementById(id).addEventListener('keydown', function(e){
-      if(e.key === 'Enter'){ e.preventDefault(); doRender(); }
-    });
-    // 防止數值欄位在 input 事件時自動觸發（僅 Enter 才觸發）
-    document.getElementById(id).addEventListener('input', function(e){
-      e.stopPropagation();
-    });
+  ['inp-year','inp-month','inp-day','inp-hour','inp-minute','inp-mingYear'].forEach(id=>{
+    $(id).addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();doRender();}});
+    $(id).addEventListener('input',e=>e.stopPropagation());
   });
-  document.querySelectorAll('.spin-btn').forEach(function(btn){
-    btn.addEventListener('keydown', function(e){
-      if(e.key === 'Enter') e.preventDefault();
-    });
-  });
+  document.querySelectorAll('.spin-btn').forEach(btn=>btn.addEventListener('keydown',e=>{if(e.key==='Enter')e.preventDefault();}));
 })();
 
-
-window.addEventListener('load',()=>{ setTimeout(useNow,400); });
+window.addEventListener('load',()=>setTimeout(useNow,400));
 </script>
 </body>
 </html>
-
-
